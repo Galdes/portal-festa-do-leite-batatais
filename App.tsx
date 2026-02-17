@@ -1414,12 +1414,12 @@ const App: React.FC = () => {
               <div className="flex items-center gap-4">
                 <img 
                   src="/img/logo-festa.png" 
-                    alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
-                    className="w-16 h-16 object-contain"
-                    width="64"
-                    height="64"
-                    loading="lazy"
-                  />
+                  alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
+                  className="w-16 h-16 object-contain"
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                />
                 </picture>
                 <span className="font-oswald text-2xl uppercase tracking-widest hidden sm:block">{FESTIVAL_NAME}</span>
               </div>
