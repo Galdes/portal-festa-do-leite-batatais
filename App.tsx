@@ -145,12 +145,21 @@ const App: React.FC = () => {
                 <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${currentPage === item.page ? 'scale-x-100' : ''}`}></span>
               </button>
             ))}
-            <button onClick={() => scrollToSection('ingressos')} className="bg-amber-600 text-white px-8 py-3 rounded-full hover:bg-amber-500 transition-all transform hover:scale-105 active:scale-95 font-oswald text-sm shadow-[0_0_20px_rgba(217,119,6,0.3)] whitespace-nowrap">
+            <button 
+              onClick={() => scrollToSection('ingressos')} 
+              className="bg-amber-600 text-white px-8 py-3 rounded-full hover:bg-amber-500 transition-all transform hover:scale-105 active:scale-95 font-oswald text-sm shadow-[0_0_20px_rgba(217,119,6,0.3)] whitespace-nowrap"
+              aria-label="Garantir ingressos para a Festa do Leite"
+            >
               Garantir Ingresso
             </button>
           </div>
 
-          <button className="lg:hidden p-2 text-white bg-white/5 rounded-full hover:bg-white/10 transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button 
+            className="lg:hidden p-2 text-white bg-white/5 rounded-full hover:bg-white/10 transition-colors" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isMenuOpen}
+          >
             {isMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -171,12 +180,25 @@ const App: React.FC = () => {
               key={page} 
               onClick={() => navigateTo(page as Page)} 
               className="text-4xl md:text-6xl font-oswald uppercase hover:text-amber-500 transition-colors"
+              aria-label={`Navegar para página ${label}`}
             >
               {label}
             </button>
           ))}
-          <button onClick={() => scrollToSection('ingressos')} className="bg-amber-600 text-white px-12 py-5 rounded-full font-oswald text-2xl mt-8 shadow-2xl">Comprar Online</button>
-          <button onClick={() => setIsMenuOpen(false)} className="mt-12 text-white/30 hover:text-white uppercase tracking-widest text-xs font-bold flex items-center gap-2"><X size={16}/> Fechar</button>
+          <button 
+            onClick={() => scrollToSection('ingressos')} 
+            className="bg-amber-600 text-white px-12 py-5 rounded-full font-oswald text-2xl mt-8 shadow-2xl"
+            aria-label="Comprar ingressos online"
+          >
+            Comprar Online
+          </button>
+          <button 
+            onClick={() => setIsMenuOpen(false)} 
+            className="mt-12 text-white/30 hover:text-white uppercase tracking-widest text-xs font-bold flex items-center gap-2"
+            aria-label="Fechar menu de navegação"
+          >
+            <X size={16} aria-hidden="true"/> Fechar
+          </button>
       </div>
 
       <main className="flex-grow">
@@ -215,14 +237,22 @@ const App: React.FC = () => {
                     FESTA DO <br />
                     <span className="text-amber-500">LEITE</span>
                   </h1>
-                  <p className="text-sm md:text-lg lg:text-xl font-playfair italic text-white/80 max-w-3xl mx-auto px-4 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                  <p className="text-sm md:text-lg lg:text-xl font-playfair italic text-white/90 max-w-3xl mx-auto px-4 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                     "{FESTIVAL_SLOGAN}"
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-4 md:pt-6 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-                    <button onClick={() => scrollToSection('ingressos')} className="group flex items-center justify-center gap-2 bg-white text-black px-8 md:px-10 py-3 md:py-4 rounded-full font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]">
-                      Comprar Online <ArrowRight size={18} className="group-hover:translate-x-1" />
+                    <button 
+                      onClick={() => scrollToSection('ingressos')} 
+                      className="group flex items-center justify-center gap-2 bg-white text-black px-8 md:px-10 py-3 md:py-4 rounded-full font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                      aria-label="Comprar ingressos online para a Festa do Leite"
+                    >
+                      Comprar Online <ArrowRight size={18} className="group-hover:translate-x-1" aria-hidden="true" />
                     </button>
-                    <button onClick={() => scrollToSection('programação')} className="flex items-center justify-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-8 md:px-10 py-3 md:py-4 rounded-full text-white font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-white/10 transition-all">
+                    <button 
+                      onClick={() => scrollToSection('programação')} 
+                      className="flex items-center justify-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-8 md:px-10 py-3 md:py-4 rounded-full text-white font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-white/10 transition-all"
+                      aria-label="Ver programação completa de shows"
+                    >
                       Ver Programação
                     </button>
                   </div>
@@ -250,7 +280,7 @@ const App: React.FC = () => {
                        <div className="w-16 h-16 bg-amber-600/10 rounded-2xl flex items-center justify-center text-amber-500 mb-8 border border-amber-600/20 group-hover:bg-amber-600 group-hover:text-white transition-colors">
                          <item.Icon size={32} />
                        </div>
-                       <h4 className="text-2xl font-oswald uppercase mb-4">{item.title}</h4>
+                       <h2 className="text-2xl font-oswald uppercase mb-4">{item.title}</h2>
                        <p className="text-neutral-500 leading-relaxed text-sm">{item.desc}</p>
                      </div>
                    ))}
@@ -263,7 +293,7 @@ const App: React.FC = () => {
               <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
                   <div className="w-full lg:w-1/3 lg:sticky lg:top-32">
-                    <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em] mb-4">Agenda</h3>
+                    <p className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em] mb-4" role="text">Agenda</p>
                     <h2 className="text-5xl md:text-6xl lg:text-7xl font-oswald uppercase mb-6 md:mb-8 leading-none">Quem Sobe <br className="hidden lg:block" />ao Palco</h2>
                     
                     <div className="flex lg:flex-col gap-3 md:gap-4 overflow-x-auto pb-4 lg:pb-0 scrollbar-hide">
@@ -289,9 +319,9 @@ const App: React.FC = () => {
                             <Music className="text-amber-500/60" size={96} />
                           </div>
                           <div className="relative p-8 md:p-10 w-full">
-                            <h4 className="text-3xl md:text-4xl font-oswald uppercase mb-4 text-amber-500">
+                            <h3 className="text-3xl md:text-4xl font-oswald uppercase mb-4 text-amber-500">
                               Programação em Breve
-                            </h4>
+                            </h3>
                             <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light mb-4">
                               A grade completa de shows da próxima edição da Festa do Leite de Batatais ainda está em definição.
                             </p>
@@ -307,7 +337,7 @@ const App: React.FC = () => {
                             <img src={artist.imageUrl} alt={`${artist.name} - Show na Festa do Leite Batatais ${artist.date}`} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-all duration-1000" loading="lazy" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
                             <div className="absolute bottom-0 left-0 p-8 md:p-10 w-full">
-                              <h4 className="text-3xl md:text-4xl font-oswald uppercase mb-3 group-hover:text-amber-500 transition-colors">{artist.name}</h4>
+                              <h3 className="text-3xl md:text-4xl font-oswald uppercase mb-3 group-hover:text-amber-500 transition-colors">{artist.name}</h3>
                               <div className="flex items-center gap-2 text-white/60 text-[10px] md:text-xs uppercase font-bold tracking-widest bg-black/40 backdrop-blur-md w-fit px-4 py-2 rounded-full border border-white/10">
                                 <Clock size={14} /> Palco Principal • 22h30
                               </div>
@@ -353,12 +383,12 @@ const App: React.FC = () => {
                      <Calendar size={400} strokeWidth={1} />
                    </div>
                    <div className="relative z-10 max-w-3xl">
-                     <h2 className="text-5xl md:text-8xl font-oswald uppercase mb-8 leading-none">Garanta o Seu <br />Lugar na Festa</h2>
-                     <p className="text-xl md:text-2xl text-white/80 mb-6 font-light leading-relaxed">
+                     <h2 className="text-5xl md:text-8xl font-oswald uppercase mb-8 leading-none text-white">Garanta o Seu <br />Lugar na Festa</h2>
+                     <p className="text-xl md:text-2xl text-white/90 mb-6 font-light leading-relaxed">
                        A grade oficial de ingressos da próxima edição ainda está em definição. Em breve você encontrará aqui
                        todas as informações sobre categorias, valores e pontos de venda oficiais.
                      </p>
-                     <p className="text-white/70 text-sm md:text-base font-light mb-10">
+                     <p className="text-white/90 text-sm md:text-base font-light mb-10">
                        Enquanto isso, acompanhe as redes sociais e os canais oficiais da Prefeitura de Batatais para ficar por
                        dentro dos anúncios da organização.
                      </p>
@@ -380,10 +410,10 @@ const App: React.FC = () => {
                 {/* Informações do Evento / Mapa do Recinto (em breve) */}
                 <div className="grid lg:grid-cols-2 gap-10 md:gap-16">
                   <div className="bg-neutral-900/40 rounded-[3rem] p-10 md:p-12 border border-white/5 space-y-6">
-                    <h3 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
+                    <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
                       Informações do Evento
-                    </h3>
-                    <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
+                    </h2>
+                    <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
                       A estrutura da próxima edição da Festa do Leite de Batatais ainda está sendo planejada pela organização.
                       Horários de abertura do recinto, programação diária, políticas de acesso e demais detalhes operacionais
                       serão divulgados assim que forem confirmados oficialmente.
@@ -412,10 +442,10 @@ const App: React.FC = () => {
                   </div>
 
                   <div className="bg-neutral-900/40 rounded-[3rem] p-10 md:p-12 border border-white/5 space-y-6">
-                    <h3 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
+                    <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
                       Mapa do Recinto – Em Breve
-                    </h3>
-                    <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
+                    </h2>
+                    <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
                       O mapa ilustrativo do recinto da Festa do Leite está em produção e será publicado aqui assim que a
                       distribuição dos espaços for confirmada pela comissão organizadora.
                     </p>
@@ -439,13 +469,13 @@ const App: React.FC = () => {
                       <div className="w-16 h-16 bg-amber-600/10 rounded-2xl flex items-center justify-center text-amber-500 mb-6 border border-amber-600/20">
                         <Users size={32} />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500 mb-4">
+                      <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500 mb-4">
                         Desfile da Festa
-                      </h3>
-                      <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
+                      </h2>
+                      <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
                         O tradicional desfile da Festa do Leite ocorre geralmente no domingo, marcando o início das festividades antes da abertura oficial no recinto. O evento sai do <strong className="text-white">Lago Artificial Ophélia Borges Silva Alves</strong>, reunindo tropas, carros de boi e alegorias, atraindo cerca de <strong className="text-amber-500">20 mil pessoas</strong>.
                       </p>
-                      <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
+                      <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
                         O desfile é um dos pontos altos da festa, celebrando a cultura rural e a tradição de Batatais, representando a essência do agronegócio e da identidade local.
                       </p>
                       <div className="bg-amber-600/10 border border-amber-600/20 rounded-2xl p-6 mt-6">
@@ -472,10 +502,10 @@ const App: React.FC = () => {
                       <div className="w-16 h-16 bg-amber-600/10 rounded-2xl flex items-center justify-center text-amber-500 mb-6 border border-amber-600/20">
                         <Building2 size={32} />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500 mb-4">
+                      <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500 mb-4">
                         Camarotes
-                      </h3>
-                      <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
+                      </h2>
+                      <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
                         Os camarotes da Festa do Leite oferecem uma experiência exclusiva e confortável para empresas, grupos e famílias que desejam aproveitar os shows e eventos com maior comodidade e privacidade.
                       </p>
                       <ul className="space-y-3 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
