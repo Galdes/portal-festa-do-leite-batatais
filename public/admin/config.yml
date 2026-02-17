@@ -1,0 +1,84 @@
+backend:
+  name: git-gateway
+  branch: main # ou master, dependendo da sua branch padrão
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: "noticias"
+    label: "Notícias"
+    folder: "content/noticias"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Data", name: "date", widget: "date", format: "DD/MM/YYYY" }
+      - { label: "Categoria", name: "category", widget: "select", options: ["Shows", "Agro", "Serviço"] }
+      - { label: "Resumo", name: "excerpt", widget: "text" }
+      - { label: "Imagem", name: "imageUrl", widget: "image", required: false }
+      - { label: "Conteúdo Completo", name: "body", widget: "markdown" }
+
+  - name: "pontos_turisticos"
+    label: "Pontos Turísticos"
+    folder: "content/pontos-turisticos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome", name: "name", widget: "string" }
+      - { label: "ID", name: "id", widget: "string", hint: "Ex: santuario, museu" }
+      - { label: "Categoria", name: "category", widget: "select", options: ["Religioso", "Histórico", "Natural", "Cultural"] }
+      - { label: "Descrição Curta", name: "description", widget: "text" }
+      - { label: "Descrição Completa", name: "fullDescription", widget: "markdown" }
+      - { label: "Endereço", name: "address", widget: "string" }
+      - { label: "Telefone", name: "phone", widget: "string", required: false }
+      - { label: "Horário de Funcionamento", name: "openingHours", widget: "string", required: false }
+      - { label: "Site", name: "website", widget: "string", required: false }
+      - { label: "Imagem", name: "imageUrl", widget: "image", required: false }
+
+  - name: "hospedagem"
+    label: "Hotéis e Pousadas"
+    folder: "content/hospedagem"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome", name: "name", widget: "string" }
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Tipo", name: "type", widget: "select", options: ["Hotel", "Pousada", "Resort"] }
+      - { label: "Descrição", name: "description", widget: "text" }
+      - { label: "Endereço", name: "address", widget: "string" }
+      - { label: "Telefone", name: "phone", widget: "string" }
+      - { label: "E-mail", name: "email", widget: "string", required: false }
+      - { label: "Site", name: "website", widget: "string", required: false }
+      - { label: "Faixa de Preço", name: "priceRange", widget: "select", options: ["Econômico", "Médio", "Alto"] }
+      - { label: "Comodidades", name: "amenities", widget: "list", field: { label: "Comodidade", name: "amenity", widget: "string" } }
+      - { label: "Imagem", name: "imageUrl", widget: "image", required: false }
+
+  - name: "artistas"
+    label: "Artistas / Programação"
+    folder: "content/artistas"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Nome", name: "name", widget: "string" }
+      - { label: "Data", name: "date", widget: "string", hint: "Ex: 09 Jul" }
+      - { label: "Imagem", name: "imageUrl", widget: "image", required: false }
+
+  - name: "configuracao"
+    label: "Configuração do Site"
+    files:
+      - file: "content/config/site.json"
+        label: "Informações Gerais"
+        name: "site"
+        fields:
+          - { label: "Nome da Festa", name: "festivalName", widget: "string" }
+          - { label: "Cidade", name: "festivalCity", widget: "string" }
+          - { label: "Datas", name: "festivalDates", widget: "string" }
+          - { label: "Slogan", name: "festivalSlogan", widget: "string" }
+          - { label: "Endereço do Recinto", name: "venueAddress", widget: "string" }
+          - { label: "Telefone Prefeitura", name: "phonePrefeitura", widget: "string" }
+          - { label: "Telefone Cultura e Turismo", name: "phoneCultura", widget: "string" }
+          - { label: "Telefone Sindicato Rural", name: "phoneSindicato", widget: "string" }
+          - { label: "Instagram", name: "instagram", widget: "string" }
+          - { label: "Facebook", name: "facebook", widget: "string" }
+          - { label: "Site Prefeitura", name: "sitePrefeitura", widget: "string" }
