@@ -110,18 +110,15 @@ const App: React.FC = () => {
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
             <div className="flex items-center gap-3 md:gap-4 group cursor-pointer" onClick={() => navigateTo('home')}>
             <div className="relative">
-              <picture>
-                <source srcSet="/img/logo-festa.webp" type="image/webp" />
-                <img 
-                  src="/img/logo-festa.png" 
-                  alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
-                  className="w-10 md:w-14 h-10 md:h-14 object-contain group-hover:scale-105 transition-transform"
-                  width="56"
-                  height="56"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </picture>
+              <img 
+                src="/img/logo-festa.png" 
+                alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
+                className="w-10 md:w-14 h-10 md:h-14 object-contain group-hover:scale-105 transition-transform"
+                width="56"
+                height="56"
+                loading="eager"
+                fetchPriority="high"
+              />
             </div>
             <div className="leading-tight hidden sm:block">
               <span className="block font-oswald text-lg md:text-xl tracking-widest uppercase">{FESTIVAL_NAME}</span>
@@ -221,18 +218,15 @@ const App: React.FC = () => {
               <div className="container mx-auto px-4 md:px-6 z-30 text-center relative">
                 <div className="max-w-6xl mx-auto space-y-3 md:space-y-4 pt-20 md:pt-24">
                   <div className="flex justify-center mb-2 md:mb-3 animate-fade-in-up">
-                    <picture>
-                      <source srcSet="/img/logo-festa.webp" type="image/webp" />
-                      <img 
-                        src="/img/logo-festa.png" 
-                        alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
-                        className="w-24 md:w-36 lg:w-40 h-auto object-contain drop-shadow-2xl"
-                        width="160"
-                        height="160"
-                        loading="eager"
-                        fetchPriority="high"
-                      />
-                    </picture>
+                    <img 
+                      src="/img/logo-festa.png" 
+                      alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
+                      className="w-24 md:w-36 lg:w-40 h-auto object-contain drop-shadow-2xl"
+                      width="160"
+                      height="160"
+                      loading="eager"
+                      fetchPriority="high"
+                    />
                   </div>
                   <div className="flex justify-center items-center gap-3 md:gap-4 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
                     <div className="h-px w-8 md:w-12 bg-amber-600/50"></div>
@@ -1418,10 +1412,8 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-24">
             <div className="space-y-8">
               <div className="flex items-center gap-4">
-                <picture>
-                  <source srcSet="/img/logo-festa.webp" type="image/webp" />
-                  <img 
-                    src="/img/logo-festa.png" 
+                <img 
+                  src="/img/logo-festa.png" 
                     alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
                     className="w-16 h-16 object-contain"
                     width="64"
