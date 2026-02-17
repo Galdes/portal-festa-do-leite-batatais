@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #050505;
+  color: #ffffff;
+}
+
+.font-oswald { 
+  font-family: 'Oswald', sans-serif; 
+}
+
+.font-playfair { 
+  font-family: 'Playfair Display', serif; 
+}
+
+/* Custom rustic effects */
+.wood-texture {
+  background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+}
+
+.text-glow {
+  text-shadow: 0 0 15px rgba(234, 179, 8, 0.6);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b45309;
+  border-radius: 10px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

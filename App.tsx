@@ -108,13 +108,16 @@ const App: React.FC = () => {
       {/* Premium Navigation */}
       <nav className={`fixed w-full z-[100] transition-all duration-500 ${scrolled || currentPage !== 'home' ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 py-3 shadow-2xl' : 'bg-transparent py-5 md:py-8'}`}>
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-          <div className="flex items-center gap-3 md:gap-4 group cursor-pointer" onClick={() => navigateTo('home')}>
+            <div className="flex items-center gap-3 md:gap-4 group cursor-pointer" onClick={() => navigateTo('home')}>
             <div className="relative">
               <img 
                 src="/img/logo-festa.png" 
                 alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
                 className="w-10 md:w-14 h-10 md:h-14 object-contain group-hover:scale-105 transition-transform"
+                width="56"
+                height="56"
                 loading="eager"
+                fetchPriority="high"
               />
             </div>
             <div className="leading-tight hidden sm:block">
@@ -197,7 +200,10 @@ const App: React.FC = () => {
                       src="/img/logo-festa.png" 
                       alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
                       className="w-24 md:w-36 lg:w-40 h-auto object-contain drop-shadow-2xl"
+                      width="160"
+                      height="160"
                       loading="eager"
+                      fetchPriority="high"
                     />
                   </div>
                   <div className="flex justify-center items-center gap-3 md:gap-4 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
@@ -510,7 +516,7 @@ const App: React.FC = () => {
                 {NEWS_DATA.map(news => (
                   <article key={news.id} className="bg-neutral-900/20 rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-amber-600/30 transition-all group flex flex-col">
                      <div className="aspect-video overflow-hidden">
-                       <img src={news.imageUrl} alt={`${news.title} - Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                       <img src={news.imageUrl} alt={`${news.title} - Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" width="800" height="450" loading="lazy" />
                      </div>
                      <div className="p-10 flex-grow flex flex-col">
                         <div className="flex justify-between items-center mb-6">
@@ -565,7 +571,7 @@ const App: React.FC = () => {
                   </div>
                   
                   <div className="aspect-video rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                    <img src={selectedArticle.imageUrl} alt={`${selectedArticle.title} - Notícia Festa do Leite Batatais`} className="w-full h-full object-cover" />
+                    <img src={selectedArticle.imageUrl} alt={`${selectedArticle.title} - Notícia Festa do Leite Batatais`} className="w-full h-full object-cover" width="1200" height="675" loading="eager" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   </div>
 
@@ -603,7 +609,7 @@ const App: React.FC = () => {
                                 className="group flex flex-col text-left space-y-5"
                              >
                                 <div className="aspect-video rounded-3xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 shadow-xl border border-white/5">
-                                  <img src={news.imageUrl} alt={`${news.title} - Leia também Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                                  <img src={news.imageUrl} alt={`${news.title} - Leia também Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" width="400" height="225" loading="lazy" />
                                 </div>
                                 <h5 className="font-oswald uppercase text-2xl leading-tight group-hover:text-amber-500 transition-colors line-clamp-2">
                                   {news.title}
@@ -651,6 +657,8 @@ const App: React.FC = () => {
                       src="/img/Festa do Leite - Batatais SP.jpg"
                       className="w-full h-full object-cover"
                       alt="Festa do Leite de Batatais - público e parque de diversões"
+                      width="800"
+                      height="1000"
                       loading="lazy"
                     />
                   </div>
@@ -829,8 +837,10 @@ const App: React.FC = () => {
                         <img 
                           src={attraction.imageUrl} 
                           alt={`${attraction.name} - ${attraction.category} em Batatais`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          loading="lazy" 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          width="600"
+                          height="400"
+                          loading="lazy"
                         />
                         <div className="absolute top-6 left-6">
                           <span className="bg-amber-600/90 backdrop-blur-sm text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
@@ -969,8 +979,10 @@ const App: React.FC = () => {
                         <img 
                           src={accommodation.imageUrl} 
                           alt={`${accommodation.name} - ${accommodation.type} em Batatais`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          loading="lazy" 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          width="600"
+                          height="400"
+                          loading="lazy"
                         />
                         <div className="absolute top-6 left-6 flex gap-3">
                           <span className="bg-amber-600/90 backdrop-blur-sm text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
@@ -1086,7 +1098,7 @@ const App: React.FC = () => {
                   </div>
                   <div className="relative">
                     <div className="aspect-[4/5] overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl">
-                      <img src="/img/Batatais SP.jpg" className="w-full h-full object-cover" alt="Batatais - SP" loading="lazy" />
+                      <img src="/img/Batatais SP.jpg" className="w-full h-full object-cover" alt="Batatais - SP" width="800" height="600" loading="lazy" />
                     </div>
                   </div>
                 </div>
@@ -1374,6 +1386,8 @@ const App: React.FC = () => {
                   src="/img/logo-festa.png" 
                   alt={`${FESTIVAL_NAME} ${FESTIVAL_CITY} - Logo Oficial`}
                   className="w-16 h-16 object-contain"
+                  width="64"
+                  height="64"
                   loading="lazy"
                 />
                 <span className="font-oswald text-2xl uppercase tracking-widest hidden sm:block">{FESTIVAL_NAME}</span>
