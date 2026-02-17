@@ -22,9 +22,16 @@ export default defineConfig(({ mode }) => {
       build: {
         rollupOptions: {
           output: {
-            manualChunks: {
-              'react-vendor': ['react', 'react-dom'],
-              'icons': ['lucide-react'],
+            manualChunks: (id) => {
+              if (id.includes('node_modules')) {
+                if (id.includes('react') || id.includes('react-dom')) {
+                  return 'react-vendor';
+                }
+                if (id.includes('lucide-react')) {
+                  return 'icons';
+                }
+                return 'vendor';
+              }
             },
           },
         },
@@ -34,8 +41,10 @@ export default defineConfig(({ mode }) => {
           compress: {
             drop_console: true,
             drop_debugger: true,
+            pure_funcs: ['console.log', 'console.info'],
           },
         },
+        chunkSizeWarningLimit: 1000,
       },
     };
 });
