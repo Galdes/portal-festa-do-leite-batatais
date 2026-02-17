@@ -180,36 +180,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"></noscript>
+    <!-- CSS crítico inline para reduzir bloqueio de renderização -->
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #050505;
-            color: #ffffff;
-        }
-        .font-oswald { font-family: 'Oswald', sans-serif; }
-        .font-playfair { font-family: 'Playfair Display', serif; }
-        
-        /* Custom rustic effects */
-        .wood-texture {
-            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-        }
-        .text-glow {
-            text-shadow: 0 0 15px rgba(234, 179, 8, 0.6);
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-          background: #050505;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #b45309;
-          border-radius: 10px;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
+        body{margin:0;font-family:'Montserrat',sans-serif;background-color:#050505;color:#fff}
+        .font-oswald{font-family:'Oswald',sans-serif}
+        .font-playfair{font-family:'Playfair Display',serif}
+        .text-glow{text-shadow:0 0 15px rgba(234,179,8,.6)}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#050505}
+        ::-webkit-scrollbar-thumb{background:#b45309;border-radius:10px}
+        .scrollbar-hide::-webkit-scrollbar{display:none}
     </style>
 <script type="importmap">
 {
