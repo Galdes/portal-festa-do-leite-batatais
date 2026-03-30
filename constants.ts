@@ -19,6 +19,8 @@ export const FESTIVAL_SLOGAN = "Onde a Tradição Encontra a Emoção";
 
 export interface NewsItem {
   id: string;
+  /** Slug único para URL /noticias/:slug */
+  slug: string;
   title: string;
   excerpt: string;
   fullText: string[];
@@ -30,6 +32,7 @@ export interface NewsItem {
 export const NEWS_DATA: NewsItem[] = [
   {
     id: '1',
+    slug: 'festa-do-leite-2026-49-edicao',
     title: '49ª Festa do Leite: 8 a 12 de julho de 2026 no Centro de Eventos',
     excerpt:
       'A programação de shows confirmada promete atrair grande público com sertanejo e pagode; programação completa em breve.',
@@ -50,6 +53,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: '2',
+    slug: 'torneio-leiteiro-tecnologia-genetica',
     title: 'Torneio Leiteiro: Tecnologia e genética de ponta em exposição',
     excerpt: 'Os pavilhões agro receberão o que há de melhor na pecuária nacional.',
     fullText: [
@@ -63,6 +67,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: '3',
+    slug: 'infraestrutura-plano-acesso-recinto',
     title: 'Infraestrutura: Novo plano de acesso para facilitar a chegada ao recinto',
     excerpt: 'Medidas visam garantir maior fluidez no trânsito e conforto para os visitantes.',
     fullText: [
@@ -75,6 +80,11 @@ export const NEWS_DATA: NewsItem[] = [
     imageUrl: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=800'
   }
 ];
+
+export function getNewsBySlug(slug: string | undefined): NewsItem | undefined {
+  if (!slug) return undefined;
+  return NEWS_DATA.find((n) => n.slug === slug);
+}
 
 export const PERFORMERS: Performer[] = [
   { name: 'Clube da Viola', date: '08 Jul · qua', imageUrl: 'https://picsum.photos/seed/clubedaviola/800/1000' },

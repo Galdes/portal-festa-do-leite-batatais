@@ -1,5 +1,14 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+  useParams,
+  Link
+} from 'react-router-dom';
 import { 
   Menu, 
   X, 
@@ -44,34 +53,163 @@ import {
   PROGRAM_DAY_LABELS,
   PERFORMERS, 
   NEWS_DATA,
-  NewsItem,
   TOURIST_ATTRACTIONS,
   ACCOMMODATIONS,
   BATATAIS_INFO,
   PERSONALITIES,
   FESTIVAL_DETAILS,
-  FESTIVAL_VENUE
+  FESTIVAL_VENUE,
+  getNewsBySlug
 } from './constants';
 
-type Page =
-  | 'home'
-  | 'news'
-  | 'about'
-  | 'contact'
-  | 'article'
-  | 'tourism'
-  | 'accommodation'
-  | 'batatais'
-  | 'privacy'
-  | 'terms';
+type ArticlePageProps = {
+  scrollToSection: (id: string) => void;
+};
+
+const ArticlePage: React.FC<ArticlePageProps> = ({ scrollToSection }) => {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const article = getNewsBySlug(slug);
+
+  if (!article) {
+    return <Navigate to="/noticias" replace />;
+  }
+
+  return (
+    <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="flex flex-wrap items-center justify-between gap-6 mb-12 border-b border-white/10 pb-8">
+          <button
+            type="button"
+            onClick={() => navigate('/noticias')}
+            className="group flex items-center gap-3 text-neutral-400 hover:text-amber-500 transition-colors font-bold uppercase text-[10px] tracking-widest"
+          >
+            <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" /> Voltar ao Portal
+          </button>
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-3 text-neutral-500 text-[10px] font-bold uppercase tracking-widest">
+              <Calendar size={16} /> Publicado em {article.date}
+            </div>
+            <button type="button" className="text-neutral-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
+              <Share2 size={18} />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-12 gap-16">
+          <div className="lg:col-span-8 space-y-12">
+            <div className="space-y-6">
+              <span className="bg-amber-600 text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest inline-block mb-4 shadow-lg">
+                {article.category}
+              </span>
+              <h1 className="text-5xl md:text-7xl font-oswald uppercase leading-[1.05] tracking-tight">{article.title}</h1>
+            </div>
+
+            <div className="aspect-video rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative">
+              <img
+                src={article.imageUrl}
+                alt={`${article.title} - Notícia Festa do Leite Batatais`}
+                className="w-full h-full object-cover"
+                width="1200"
+                height="675"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+
+            <div className="space-y-8 text-neutral-300 text-xl md:text-2xl leading-[1.6] font-light">
+              {article.fullText.map((paragraph, i) => (
+                <p key={i} className="first-letter:text-5xl first-letter:font-oswald first-letter:text-amber-500 first-letter:mr-3 first-letter:float-left">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+
+            <div className="bg-neutral-900/40 p-12 rounded-[3rem] border border-white/5 mt-20 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12">
+                <Zap size={160} />
+              </div>
+              <h4 className="text-3xl font-oswald uppercase mb-4 text-amber-500">Mantenha-se Informado</h4>
+              <p className="text-neutral-400 text-lg mb-8 font-light">Receba atualizações exclusivas sobre a programação diretamente no seu e-mail.</p>
+              <div className="flex flex-col sm:flex-row gap-4 relative z-10">
+                <input
+                  type="email"
+                  placeholder="Endereço de e-mail"
+                  className="bg-white/5 border border-white/10 rounded-2xl px-8 py-5 flex-grow outline-none focus:border-amber-600 transition-all font-light"
+                />
+                <button
+                  type="button"
+                  className="bg-white text-black font-oswald uppercase px-12 py-5 rounded-2xl hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 shadow-lg"
+                >
+                  Inscrever
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-4">
+            <div className="sticky top-40 space-y-16">
+              <div className="space-y-10">
+                <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm flex items-center gap-3">
+                  <div className="h-px w-8 bg-amber-600"></div> Leia Também
+                </h4>
+                <div className="space-y-12">
+                  {NEWS_DATA.filter((n) => n.id !== article.id).map((news) => (
+                    <button
+                      type="button"
+                      key={news.id}
+                      onClick={() => navigate(`/noticias/${news.slug}`)}
+                      className="group flex flex-col text-left space-y-5"
+                    >
+                      <div className="aspect-video rounded-3xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 shadow-xl border border-white/5">
+                        <img
+                          src={news.imageUrl}
+                          alt={`${news.title} - Leia também Festa do Leite Batatais`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                          width="400"
+                          height="225"
+                          loading="lazy"
+                        />
+                      </div>
+                      <h5 className="font-oswald uppercase text-2xl leading-tight group-hover:text-amber-500 transition-colors line-clamp-2">{news.title}</h5>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-amber-600 p-10 rounded-[3rem] text-white shadow-2xl">
+                <h4 className="text-2xl font-oswald uppercase mb-4">Ingressos</h4>
+                <p className="text-white/80 text-sm mb-8 font-light leading-relaxed">
+                  Garanta sua presença no maior evento da região com condições exclusivas online.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('ingressos')}
+                  className="w-full bg-black text-white py-5 rounded-2xl font-oswald uppercase text-sm tracking-widest hover:bg-neutral-800 transition-all transform active:scale-95 shadow-xl"
+                >
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDay, setActiveDay] = useState<string>(PROGRAM_DAY_LABELS[0]);
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const isNavActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -79,25 +217,25 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigateTo = (page: Page, article: NewsItem | null = null) => {
-    setCurrentPage(page);
-    setSelectedArticle(article);
-    setIsMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  useEffect(() => {
+    const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo;
+    if (location.pathname === '/' && scrollTo) {
+      const t = window.setTimeout(() => {
+        document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth' });
+        navigate('.', { replace: true, state: {} });
+      }, 150);
+      return () => window.clearTimeout(t);
+    }
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.state, navigate]);
 
   const scrollToSection = (id: string) => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const element = document.getElementById(id);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
-    }
     setIsMenuOpen(false);
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: id } });
+      return;
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const currentPerformers = useMemo(() => {
@@ -107,9 +245,9 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#050505] text-white selection:bg-amber-400 selection:text-black font-sans overflow-x-hidden">
       {/* Premium Navigation */}
-      <nav className={`fixed w-full z-[100] transition-all duration-500 ${scrolled || currentPage !== 'home' ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 py-3 shadow-2xl' : 'bg-transparent py-5 md:py-8'}`}>
+      <nav className={`fixed w-full z-[100] transition-all duration-500 ${scrolled || location.pathname !== '/' ? 'bg-black/95 backdrop-blur-xl border-b border-white/5 py-3 shadow-2xl' : 'bg-transparent py-5 md:py-8'}`}>
         <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-            <div className="flex items-center gap-3 md:gap-4 group cursor-pointer" onClick={() => navigateTo('home')}>
+            <Link to="/" className="flex items-center gap-3 md:gap-4 group cursor-pointer" onClick={() => setIsMenuOpen(false)}>
             <div className="relative">
               <img 
                 src="/img/logo-festa.png" 
@@ -125,26 +263,26 @@ const App: React.FC = () => {
               <span className="block font-oswald text-lg md:text-xl tracking-widest uppercase">{FESTIVAL_NAME}</span>
               <span className="block text-[8px] md:text-[10px] text-amber-500 uppercase tracking-[0.2em] font-bold">{FESTIVAL_CITY}</span>
             </div>
-          </div>
+          </Link>
 
           <div className="hidden lg:flex gap-6 xl:gap-8 text-[11px] font-bold uppercase tracking-[0.2em] items-center relative z-10">
             {[
-              { label: 'Início', page: 'home' },
-              { label: 'Notícias', page: 'news' },
-              { label: 'Turismo', page: 'tourism' },
-              { label: 'Hospedagem', page: 'accommodation' },
-              { label: 'Batatais', page: 'batatais' },
-              { label: 'Sobre', page: 'about' },
-              { label: 'Contato', page: 'contact' }
+              { label: 'Início', to: '/' },
+              { label: 'Notícias', to: '/noticias' },
+              { label: 'Turismo', to: '/turismo' },
+              { label: 'Hospedagem', to: '/hospedagem' },
+              { label: 'Batatais', to: '/batatais' },
+              { label: 'Sobre', to: '/sobre' },
+              { label: 'Contato', to: '/contato' }
             ].map((item) => (
-              <button 
-                key={item.page} 
-                onClick={() => navigateTo(item.page as Page)}
-                className={`hover:text-amber-500 transition-colors relative group py-2 whitespace-nowrap`}
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`hover:text-amber-500 transition-colors relative group py-2 whitespace-nowrap ${isNavActive(item.to) ? 'text-amber-500' : ''}`}
               >
                 {item.label}
-                <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${currentPage === item.page ? 'scale-x-100' : ''}`}></span>
-              </button>
+                <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-amber-500 transform transition-transform duration-300 ${isNavActive(item.to) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+              </Link>
             ))}
             <button 
               onClick={() => scrollToSection('ingressos')} 
@@ -169,22 +307,23 @@ const App: React.FC = () => {
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-40 bg-black/98 backdrop-blur-2xl transition-all duration-500 flex flex-col items-center justify-center gap-8 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           {[
-            { page: 'home', label: 'Início' },
-            { page: 'news', label: 'Notícias' },
-            { page: 'tourism', label: 'Turismo' },
-            { page: 'accommodation', label: 'Hospedagem' },
-            { page: 'batatais', label: 'Batatais' },
-            { page: 'about', label: 'Sobre' },
-            { page: 'contact', label: 'Contato' }
-          ].map(({ page, label }) => (
-            <button 
-              key={page} 
-              onClick={() => navigateTo(page as Page)} 
+            { to: '/', label: 'Início' },
+            { to: '/noticias', label: 'Notícias' },
+            { to: '/turismo', label: 'Turismo' },
+            { to: '/hospedagem', label: 'Hospedagem' },
+            { to: '/batatais', label: 'Batatais' },
+            { to: '/sobre', label: 'Sobre' },
+            { to: '/contato', label: 'Contato' }
+          ].map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={() => setIsMenuOpen(false)}
               className="text-4xl md:text-6xl font-oswald uppercase hover:text-amber-500 transition-colors"
               aria-label={`Navegar para página ${label}`}
             >
               {label}
-            </button>
+            </Link>
           ))}
           <button 
             onClick={() => scrollToSection('ingressos')} 
@@ -203,7 +342,10 @@ const App: React.FC = () => {
       </div>
 
       <main className="flex-grow">
-        {currentPage === 'home' && (
+        <Routes>
+        <Route
+          path="/"
+          element={
           <>
             {/* Hero Section - Reimagined */}
             <section
@@ -542,9 +684,10 @@ const App: React.FC = () => {
               </div>
             </section>
           </>
-        )}
+          }
+        />
 
-        {currentPage === 'news' && (
+        <Route path="/noticias" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="mb-20 text-center">
@@ -564,113 +707,24 @@ const App: React.FC = () => {
                         </div>
                         <h3 className="text-2xl md:text-3xl font-oswald uppercase mb-6 leading-tight group-hover:text-amber-500 transition-colors">{news.title}</h3>
                         <p className="text-neutral-400 text-sm mb-10 flex-grow leading-relaxed line-clamp-3 font-light">{news.excerpt}</p>
-                        <button 
-                          onClick={() => navigateTo('article', news)}
+                        <Link
+                          to={`/noticias/${news.slug}`}
                           className="flex items-center gap-3 text-white font-bold uppercase text-[10px] tracking-widest hover:text-amber-500 transition-all group/btn w-fit"
                         >
                           Ler reportagem completa <ArrowRight size={14} className="group-hover/btn:translate-x-2 transition-transform" />
-                        </button>
+                        </Link>
                      </div>
                   </article>
                 ))}
               </div>
             </div>
           </section>
-        )}
+        }
+        />
 
-        {currentPage === 'article' && selectedArticle && (
-          <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
-            <div className="container mx-auto max-w-6xl">
-              <div className="flex flex-wrap items-center justify-between gap-6 mb-12 border-b border-white/10 pb-8">
-                <button 
-                  onClick={() => navigateTo('news')}
-                  className="group flex items-center gap-3 text-neutral-400 hover:text-amber-500 transition-colors font-bold uppercase text-[10px] tracking-widest"
-                >
-                  <ArrowLeft size={20} className="group-hover:-translate-x-2 transition-transform" /> Voltar ao Portal
-                </button>
-                <div className="flex items-center gap-8">
-                   <div className="flex items-center gap-3 text-neutral-500 text-[10px] font-bold uppercase tracking-widest">
-                     <Calendar size={16} /> Publicado em {selectedArticle.date}
-                   </div>
-                   <button className="text-neutral-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
-                     <Share2 size={18} />
-                   </button>
-                </div>
-              </div>
+        <Route path="/noticias/:slug" element={<ArticlePage scrollToSection={scrollToSection} />} />
 
-              <div className="grid lg:grid-cols-12 gap-16">
-                <div className="lg:col-span-8 space-y-12">
-                  <div className="space-y-6">
-                    <span className="bg-amber-600 text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest inline-block mb-4 shadow-lg">
-                      {selectedArticle.category}
-                    </span>
-                    <h1 className="text-5xl md:text-7xl font-oswald uppercase leading-[1.05] tracking-tight">
-                      {selectedArticle.title}
-                    </h1>
-                  </div>
-                  
-                  <div className="aspect-video rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                    <img src={selectedArticle.imageUrl} alt={`${selectedArticle.title} - Notícia Festa do Leite Batatais`} className="w-full h-full object-cover" width="1200" height="675" loading="eager" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                  </div>
-
-                  <div className="space-y-8 text-neutral-300 text-xl md:text-2xl leading-[1.6] font-light">
-                    {selectedArticle.fullText.map((paragraph, i) => (
-                      <p key={i} className="first-letter:text-5xl first-letter:font-oswald first-letter:text-amber-500 first-letter:mr-3 first-letter:float-left">{paragraph}</p>
-                    ))}
-                  </div>
-
-                  <div className="bg-neutral-900/40 p-12 rounded-[3rem] border border-white/5 mt-20 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12">
-                      <Zap size={160} />
-                    </div>
-                    <h4 className="text-3xl font-oswald uppercase mb-4 text-amber-500">Mantenha-se Informado</h4>
-                    <p className="text-neutral-400 text-lg mb-8 font-light">Receba atualizações exclusivas sobre a programação diretamente no seu e-mail.</p>
-                    <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-                      <input type="email" placeholder="Endereço de e-mail" className="bg-white/5 border border-white/10 rounded-2xl px-8 py-5 flex-grow outline-none focus:border-amber-600 transition-all font-light" />
-                      <button className="bg-white text-black font-oswald uppercase px-12 py-5 rounded-2xl hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 shadow-lg">Inscrever</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sidebar Editorial */}
-                <div className="lg:col-span-4">
-                   <div className="sticky top-40 space-y-16">
-                      <div className="space-y-10">
-                        <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm flex items-center gap-3">
-                          <div className="h-px w-8 bg-amber-600"></div> Leia Também
-                        </h4>
-                        <div className="space-y-12">
-                           {NEWS_DATA.filter(n => n.id !== selectedArticle.id).map(news => (
-                             <button 
-                                key={news.id} 
-                                onClick={() => navigateTo('article', news)}
-                                className="group flex flex-col text-left space-y-5"
-                             >
-                                <div className="aspect-video rounded-3xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 shadow-xl border border-white/5">
-                                  <img src={news.imageUrl} alt={`${news.title} - Leia também Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" width="400" height="225" loading="lazy" />
-                                </div>
-                                <h5 className="font-oswald uppercase text-2xl leading-tight group-hover:text-amber-500 transition-colors line-clamp-2">
-                                  {news.title}
-                                </h5>
-                             </button>
-                           ))}
-                        </div>
-                      </div>
-
-                      <div className="bg-amber-600 p-10 rounded-[3rem] text-white shadow-2xl">
-                         <h4 className="text-2xl font-oswald uppercase mb-4">Ingressos</h4>
-                         <p className="text-white/80 text-sm mb-8 font-light leading-relaxed">Garanta sua presença no maior evento da região com condições exclusivas online.</p>
-                         <button onClick={() => scrollToSection('ingressos')} className="w-full bg-black text-white py-5 rounded-2xl font-oswald uppercase text-sm tracking-widest hover:bg-neutral-800 transition-all transform active:scale-95 shadow-xl">Comprar Agora</button>
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {currentPage === 'about' && (
+        <Route path="/sobre" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 space-y-6">
@@ -762,9 +816,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'contact' && (
+        />
+
+        <Route path="/contato" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
@@ -846,9 +902,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'tourism' && (
+        />
+
+        <Route path="/turismo" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
@@ -976,9 +1034,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'accommodation' && (
+        />
+
+        <Route path="/hospedagem" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
@@ -1107,9 +1167,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'batatais' && (
+        />
+
+        <Route path="/batatais" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
@@ -1272,9 +1334,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'privacy' && (
+        />
+
+        <Route path="/privacidade" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto max-w-4xl space-y-10">
               <h1 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">Política de Privacidade</h1>
@@ -1342,9 +1406,11 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
 
-        {currentPage === 'terms' && (
+        />
+
+        <Route path="/termos" element={
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto max-w-4xl space-y-10">
               <h1 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">Termos de Uso</h1>
@@ -1413,7 +1479,13 @@ const App: React.FC = () => {
               </div>
             </div>
           </section>
-        )}
+        }
+
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
       </main>
 
       <footer className="bg-[#050505] pt-32 pb-16 border-t border-white/5 px-4 mt-auto">
@@ -1449,13 +1521,13 @@ const App: React.FC = () => {
               <div className="space-y-8">
                 <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm">Portal</h4>
                 <ul className="space-y-4 text-neutral-400 font-bold text-[10px] uppercase tracking-[0.2em]">
-                  <li><button onClick={() => navigateTo('home')} className="hover:text-white transition-colors">Início</button></li>
-                  <li><button onClick={() => navigateTo('news')} className="hover:text-white transition-colors">Notícias</button></li>
-                  <li><button onClick={() => navigateTo('tourism')} className="hover:text-white transition-colors">Turismo</button></li>
-                  <li><button onClick={() => navigateTo('accommodation')} className="hover:text-white transition-colors">Hospedagem</button></li>
-                  <li><button onClick={() => navigateTo('batatais')} className="hover:text-white transition-colors">Batatais</button></li>
-                  <li><button onClick={() => navigateTo('about')} className="hover:text-white transition-colors">A Festa</button></li>
-                  <li><button onClick={() => navigateTo('contact')} className="hover:text-white transition-colors">Fale Conosco</button></li>
+                  <li><button type="button" onClick={() => navigate('/')} className="hover:text-white transition-colors">Início</button></li>
+                  <li><button type="button" onClick={() => navigate('/noticias')} className="hover:text-white transition-colors">Notícias</button></li>
+                  <li><button type="button" onClick={() => navigate('/turismo')} className="hover:text-white transition-colors">Turismo</button></li>
+                  <li><button type="button" onClick={() => navigate('/hospedagem')} className="hover:text-white transition-colors">Hospedagem</button></li>
+                  <li><button type="button" onClick={() => navigate('/batatais')} className="hover:text-white transition-colors">Batatais</button></li>
+                  <li><button type="button" onClick={() => navigate('/sobre')} className="hover:text-white transition-colors">A Festa</button></li>
+                  <li><button type="button" onClick={() => navigate('/contato')} className="hover:text-white transition-colors">Fale Conosco</button></li>
                 </ul>
               </div>
               <div className="space-y-8">
@@ -1491,10 +1563,10 @@ const App: React.FC = () => {
               </a>
             </p>
             <div className="flex gap-10">
-               <button onClick={() => navigateTo('privacy')} className="hover:text-white transition-colors">
+               <button type="button" onClick={() => navigate('/privacidade')} className="hover:text-white transition-colors">
                  Privacidade
                </button>
-               <button onClick={() => navigateTo('terms')} className="hover:text-white transition-colors">
+               <button type="button" onClick={() => navigate('/termos')} className="hover:text-white transition-colors">
                  Termos de Uso
                </button>
             </div>
