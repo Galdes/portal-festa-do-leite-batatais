@@ -3,7 +3,18 @@ import { Performer, Sponsor, PointOfSale, TouristAttraction, Accommodation } fro
 
 export const FESTIVAL_NAME = "Festa do Leite";
 export const FESTIVAL_CITY = "Batatais - SP";
-export const FESTIVAL_DATES = "09 a 13 de Julho";
+export const FESTIVAL_EDITION = "49ª edição";
+export const FESTIVAL_DATES = "8 a 12 de julho de 2026";
+
+/** Rótulos da agenda (dia + dia da semana, julho/2026). Deve coincidir com `Performer.date`. */
+export const PROGRAM_DAY_LABELS = [
+  "08 Jul · qua",
+  "09 Jul · qui",
+  "10 Jul · sex",
+  "11 Jul · sáb",
+  "12 Jul · dom",
+] as const;
+
 export const FESTIVAL_SLOGAN = "Onde a Tradição Encontra a Emoção";
 
 export interface NewsItem {
@@ -19,16 +30,23 @@ export interface NewsItem {
 export const NEWS_DATA: NewsItem[] = [
   {
     id: '1',
-    title: 'Grandes atrações confirmadas para a próxima edição da Festa do Leite',
-    excerpt: 'A organização revelou os primeiros nomes que subirão ao palco principal este ano.',
+    title: '49ª Festa do Leite: 8 a 12 de julho de 2026 no Centro de Eventos',
+    excerpt:
+      'A programação de shows confirmada promete atrair grande público com sertanejo e pagode; programação completa em breve.',
     fullText: [
-      "A expectativa chegou ao fim. A Comissão Organizadora da Festa do Leite de Batatais acaba de confirmar as primeiras atrações musicais que prometem agitar as noites do Centro de Eventos Antônio Prado Baptista.",
-      "Considerada uma das festas mais tradicionais do interior paulista, a grade deste ano foi pensada para abraçar diversos públicos, mantendo a essência sertaneja que é marca registrada da nossa cidade. Além dos shows principais, o Palco Batatais contará com talentos regionais, valorizando a cultura local.",
-      "A venda de ingressos começará em breve através dos canais oficiais. Fique atento às nossas redes sociais para não perder o lançamento do primeiro lote, que costuma esgotar em tempo recorde."
+      'A 49ª edição da Festa do Leite de Batatais será realizada entre os dias 8 e 12 de julho de 2026, no Centro de Eventos "Antônio Carlos Prado Baptista". Reconhecida como uma das mais tradicionais festas do interior paulista, a festa reúne, em um só espaço, música, cultura, tradição, esportes e o fortalecimento do agronegócio.',
+      'A programação de shows confirmados deste ano promete atrair grande público com uma seleção de artistas consagrados do sertanejo e do pagode, além de nomes que vêm ganhando destaque no cenário nacional.',
+      'A abertura, no dia 8, contará com apresentações de Clube da Viola, celebrando 30 anos de carreira, e da consagrada dupla Edson & Hudson.',
+      'No dia seguinte (9), feriado, o palco recebe o cantor Dilsinho, um dos principais nomes do pagode atual.',
+      'Na sexta-feira (10), o público poderá acompanhar os shows de Júnior & Cezar e Jads & Jadson, conhecidos por seu repertório sertanejo marcante.',
+      'Já no sábado (11), sobem ao palco Felipe & Rodrigo e o projeto Country Beat, trazendo ainda mais diversidade musical ao evento.',
+      'Encerrando a programação, no domingo (12), a tradição fica por conta de Trio Parada Dura, referência da música sertaneja raiz.',
+      'Além das atrações musicais, a Festa do Leite mantém sua programação tradicional, com atividades voltadas ao setor agropecuário, como o torneio leiteiro, exposições de animais, rodeio, provas hípicas, além de espaços com feira de artesanato, parque de diversões e praça de alimentação, oferecendo opções de lazer para toda a família.',
+      'A expectativa é de mais uma edição de sucesso, reafirmando a força e a tradição da Festa do Leite no cenário regional. Em breve, programação completa.'
     ],
-    date: '15 Mai',
+    date: 'Mar 2026',
     category: 'Shows',
-    imageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=800'
+    imageUrl: '/img/logo-festa.png'
   },
   {
     id: '2',
@@ -58,9 +76,16 @@ export const NEWS_DATA: NewsItem[] = [
   }
 ];
 
-// Enquanto a grade oficial de shows não for divulgada, mantemos a lista vazia
-// e exibimos um estado \"Em breve\" na interface.
-export const PERFORMERS: Performer[] = [];
+export const PERFORMERS: Performer[] = [
+  { name: 'Clube da Viola', date: '08 Jul · qua', imageUrl: 'https://picsum.photos/seed/clubedaviola/800/1000' },
+  { name: 'Edson & Hudson', date: '08 Jul · qua', imageUrl: 'https://picsum.photos/seed/edsonhudson/800/1000' },
+  { name: 'Dilsinho', date: '09 Jul · qui', imageUrl: 'https://picsum.photos/seed/dilsinho/800/1000' },
+  { name: 'Júnior & Cezar', date: '10 Jul · sex', imageUrl: 'https://picsum.photos/seed/juniorcezar/800/1000' },
+  { name: 'Jads & Jadson', date: '10 Jul · sex', imageUrl: 'https://picsum.photos/seed/jadsjadson/800/1000' },
+  { name: 'Felipe & Rodrigo', date: '11 Jul · sáb', imageUrl: 'https://picsum.photos/seed/feliperodrigo/800/1000' },
+  { name: 'Country Beat', date: '11 Jul · sáb', imageUrl: 'https://picsum.photos/seed/countrybeat/800/1000' },
+  { name: 'Trio Parada Dura', date: '12 Jul · dom', imageUrl: 'https://picsum.photos/seed/trioparadadura/800/1000' }
+];
 
 export const SPONSORS: Sponsor[] = [
   { name: "Ambev", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ambev_logo.svg" },

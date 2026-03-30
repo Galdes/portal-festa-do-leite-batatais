@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Menu, 
@@ -38,7 +38,10 @@ import {
 import { 
   FESTIVAL_NAME, 
   FESTIVAL_CITY, 
-  FESTIVAL_SLOGAN, 
+  FESTIVAL_SLOGAN,
+  FESTIVAL_DATES,
+  FESTIVAL_EDITION,
+  PROGRAM_DAY_LABELS,
   PERFORMERS, 
   NEWS_DATA,
   NewsItem,
@@ -46,7 +49,8 @@ import {
   ACCOMMODATIONS,
   BATATAIS_INFO,
   PERSONALITIES,
-  FESTIVAL_DETAILS
+  FESTIVAL_DETAILS,
+  FESTIVAL_VENUE
 } from './constants';
 
 type Page =
@@ -66,7 +70,7 @@ const App: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeDay, setActiveDay] = useState('Em breve');
+  const [activeDay, setActiveDay] = useState<string>(PROGRAM_DAY_LABELS[0]);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
@@ -100,9 +104,6 @@ const App: React.FC = () => {
     return PERFORMERS.filter(p => p.date === activeDay);
   }, [activeDay]);
 
-  // Enquanto a grade de shows nÃ£o estiver definida, usamos mÃºltiplas abas "Em breve"
-  const days = ['Em breve', 'Em breve', 'Em breve', 'Em breve'];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#050505] text-white selection:bg-amber-400 selection:text-black font-sans overflow-x-hidden">
       {/* Premium Navigation */}
@@ -128,8 +129,8 @@ const App: React.FC = () => {
 
           <div className="hidden lg:flex gap-6 xl:gap-8 text-[11px] font-bold uppercase tracking-[0.2em] items-center relative z-10">
             {[
-              { label: 'InÃ­cio', page: 'home' },
-              { label: 'NotÃ­cias', page: 'news' },
+              { label: 'Início', page: 'home' },
+              { label: 'Notícias', page: 'news' },
               { label: 'Turismo', page: 'tourism' },
               { label: 'Hospedagem', page: 'accommodation' },
               { label: 'Batatais', page: 'batatais' },
@@ -168,8 +169,8 @@ const App: React.FC = () => {
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-40 bg-black/98 backdrop-blur-2xl transition-all duration-500 flex flex-col items-center justify-center gap-8 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           {[
-            { page: 'home', label: 'InÃ­cio' },
-            { page: 'news', label: 'NotÃ­cias' },
+            { page: 'home', label: 'Início' },
+            { page: 'news', label: 'Notícias' },
             { page: 'tourism', label: 'Turismo' },
             { page: 'accommodation', label: 'Hospedagem' },
             { page: 'batatais', label: 'Batatais' },
@@ -180,7 +181,7 @@ const App: React.FC = () => {
               key={page} 
               onClick={() => navigateTo(page as Page)} 
               className="text-4xl md:text-6xl font-oswald uppercase hover:text-amber-500 transition-colors"
-              aria-label={`Navegar para pÃ¡gina ${label}`}
+              aria-label={`Navegar para página ${label}`}
             >
               {label}
             </button>
@@ -195,7 +196,7 @@ const App: React.FC = () => {
           <button 
             onClick={() => setIsMenuOpen(false)} 
             className="mt-12 text-white/30 hover:text-white uppercase tracking-widest text-xs font-bold flex items-center gap-2"
-            aria-label="Fechar menu de navegaÃ§Ã£o"
+            aria-label="Fechar menu de navegação"
           >
             <X size={16} aria-hidden="true"/> Fechar
           </button>
@@ -230,7 +231,7 @@ const App: React.FC = () => {
                   </div>
                   <div className="flex justify-center items-center gap-3 md:gap-4 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
                     <div className="h-px w-8 md:w-12 bg-amber-600/50"></div>
-                    <span className="text-amber-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.5em]">A Maior TradiÃ§Ã£o de Batatais</span>
+                    <span className="text-amber-500 text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] md:tracking-[0.5em]">A Maior Tradição de Batatais</span>
                     <div className="h-px w-8 md:w-12 bg-amber-600/50"></div>
                   </div>
                   <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-oswald uppercase leading-[0.9] tracking-tighter text-glow drop-shadow-2xl animate-fade-in-up" style={{animationDelay: '0.2s'}}>
@@ -239,6 +240,9 @@ const App: React.FC = () => {
                   </h1>
                   <p className="text-sm md:text-lg lg:text-xl font-playfair italic text-white/90 max-w-3xl mx-auto px-4 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
                     "{FESTIVAL_SLOGAN}"
+                  </p>
+                  <p className="text-xs md:text-sm font-oswald uppercase tracking-[0.25em] text-amber-500/90 max-w-3xl mx-auto px-4 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+                    {FESTIVAL_EDITION} · {FESTIVAL_DATES}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-4 md:pt-6 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
                     <button 
@@ -249,11 +253,11 @@ const App: React.FC = () => {
                       Comprar Online <ArrowRight size={18} className="group-hover:translate-x-1" aria-hidden="true" />
                     </button>
                     <button 
-                      onClick={() => scrollToSection('programaÃ§Ã£o')} 
+                      onClick={() => scrollToSection('programação')} 
                       className="flex items-center justify-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-8 md:px-10 py-3 md:py-4 rounded-full text-white font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-white/10 transition-all"
-                      aria-label="Ver programaÃ§Ã£o completa de shows"
+                      aria-label="Ver programação completa de shows"
                     >
-                      Ver ProgramaÃ§Ã£o
+                      Ver Programação
                     </button>
                   </div>
                 </div>
@@ -270,11 +274,11 @@ const App: React.FC = () => {
               <div className="container mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                    {[
-                     { Icon: Trophy, title: "Torneio Leiteiro", desc: "A elite da genÃ©tica e produtividade leiteira em exposition tÃ©cnica." },
+                     { Icon: Trophy, title: "Torneio Leiteiro", desc: "A elite da genética e produtividade leiteira em exposition técnica." },
                      // Line 181: Icon: Music is now defined because it's imported from lucide-react
-                     { Icon: Music, title: "Grandes Shows", desc: "Os maiores nomes do cenÃ¡rio nacional no palco principal." },
-                     { Icon: Coffee, title: "Gastronomia", desc: "Uma praÃ§a de alimentaÃ§Ã£o completa com o melhor da culinÃ¡ria local." },
-                     { Icon: Zap, title: "DiversÃ£o", desc: "Parque de diversÃµes de Ãºltima geraÃ§Ã£o para toda a famÃ­lia." }
+                     { Icon: Music, title: "Grandes Shows", desc: "Os maiores nomes do cenário nacional no palco principal." },
+                     { Icon: Coffee, title: "Gastronomia", desc: "Uma praça de alimentação completa com o melhor da culinária local." },
+                     { Icon: Zap, title: "Diversão", desc: "Parque de diversões de última geração para toda a família." }
                    ].map((item, i) => (
                      <div key={i} className="group p-8 rounded-[2.5rem] bg-neutral-900/30 border border-white/5 hover:border-amber-600/30 transition-all duration-500 hover:-translate-y-2">
                        <div className="w-16 h-16 bg-amber-600/10 rounded-2xl flex items-center justify-center text-amber-500 mb-8 border border-amber-600/20 group-hover:bg-amber-600 group-hover:text-white transition-colors">
@@ -288,8 +292,8 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            {/* ProgramaÃ§Ã£o Section - Mantida Conforme Pedido */}
-            <section id="programaÃ§Ã£o" className="py-24 md:py-32 bg-[#080808] border-y border-white/5">
+            {/* Programação Section - Mantida Conforme Pedido */}
+            <section id="programação" className="py-24 md:py-32 bg-[#080808] border-y border-white/5">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
                   <div className="w-full lg:w-1/3 lg:sticky lg:top-32">
@@ -297,9 +301,9 @@ const App: React.FC = () => {
                     <h2 className="text-5xl md:text-6xl lg:text-7xl font-oswald uppercase mb-6 md:mb-8 leading-none">Quem Sobe <br className="hidden lg:block" />ao Palco</h2>
                     
                     <div className="flex lg:flex-col gap-3 md:gap-4 overflow-x-auto pb-4 lg:pb-0 scrollbar-hide">
-                      {days.map(day => (
+                      {PROGRAM_DAY_LABELS.map((day, dayIndex) => (
                         <button 
-                          key={day}
+                          key={`${day}-${dayIndex}`}
                           onClick={() => setActiveDay(day)}
                           className={`flex items-center justify-between px-6 py-4 md:px-8 md:py-5 rounded-xl border transition-all duration-300 whitespace-nowrap lg:whitespace-normal flex-shrink-0 lg:flex-shrink-1 ${activeDay === day ? 'bg-amber-600 border-amber-600 shadow-lg lg:translate-x-4' : 'bg-transparent border-white/10 hover:border-white/30'}`}
                         >
@@ -320,13 +324,13 @@ const App: React.FC = () => {
                           </div>
                           <div className="relative p-8 md:p-10 w-full">
                             <h3 className="text-3xl md:text-4xl font-oswald uppercase mb-4 text-amber-500">
-                              ProgramaÃ§Ã£o em Breve
+                              Programação em Breve
                             </h3>
                             <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light mb-4">
-                              A grade completa de shows da prÃ³xima ediÃ§Ã£o da Festa do Leite de Batatais ainda estÃ¡ em definiÃ§Ã£o.
+                              A grade completa de shows da próxima edição da Festa do Leite de Batatais ainda está em definição.
                             </p>
                             <p className="text-neutral-500 text-xs md:text-sm leading-relaxed font-light">
-                              Acompanhe nossas redes oficiais para ser o primeiro a saber sobre as atraÃ§Ãµes confirmadas e datas dos
+                              Acompanhe nossas redes oficiais para ser o primeiro a saber sobre as atrações confirmadas e datas dos
                               shows.
                             </p>
                           </div>
@@ -339,7 +343,7 @@ const App: React.FC = () => {
                             <div className="absolute bottom-0 left-0 p-8 md:p-10 w-full">
                               <h3 className="text-3xl md:text-4xl font-oswald uppercase mb-3 group-hover:text-amber-500 transition-colors">{artist.name}</h3>
                               <div className="flex items-center gap-2 text-white/60 text-[10px] md:text-xs uppercase font-bold tracking-widest bg-black/40 backdrop-blur-md w-fit px-4 py-2 rounded-full border border-white/10">
-                                <Clock size={14} /> Palco Principal â€¢ 22h30
+                                <Clock size={14} /> Palco Principal • 22h30
                               </div>
                             </div>
                           </div>
@@ -357,7 +361,7 @@ const App: React.FC = () => {
                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
                     <div>
                       <h4 className="text-5xl md:text-7xl font-oswald text-black mb-2 tracking-tighter">100%</h4>
-                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">TradiÃ§Ã£o</p>
+                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">Tradição</p>
                     </div>
                     <div>
                       <h4 className="text-5xl md:text-7xl font-oswald text-black mb-2 tracking-tighter">250k</h4>
@@ -365,11 +369,11 @@ const App: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="text-5xl md:text-7xl font-oswald text-black mb-2 tracking-tighter">30+</h4>
-                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">AtraÃ§Ãµes</p>
+                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">Atrações</p>
                     </div>
                     <div>
                       <h4 className="text-5xl md:text-7xl font-oswald text-black mb-2 tracking-tighter">ELITE</h4>
-                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">GenÃ©tica</p>
+                      <p className="text-black/60 uppercase font-bold text-[10px] tracking-widest">Genética</p>
                     </div>
                  </div>
                </div>
@@ -385,76 +389,80 @@ const App: React.FC = () => {
                    <div className="relative z-10 max-w-3xl">
                      <h2 className="text-5xl md:text-8xl font-oswald uppercase mb-8 leading-none text-white">Garanta o Seu <br />Lugar na Festa</h2>
                      <p className="text-xl md:text-2xl text-white/90 mb-6 font-light leading-relaxed">
-                       A grade oficial de ingressos da prÃ³xima ediÃ§Ã£o ainda estÃ¡ em definiÃ§Ã£o. Em breve vocÃª encontrarÃ¡ aqui
-                       todas as informaÃ§Ãµes sobre categorias, valores e pontos de venda oficiais.
+                       A grade oficial de ingressos da próxima edição ainda está em definição. Em breve você encontrará aqui
+                       todas as informações sobre categorias, valores e pontos de venda oficiais. A festa ocorre de {FESTIVAL_DATES}.
                      </p>
                      <p className="text-white/90 text-sm md:text-base font-light mb-10">
                        Enquanto isso, acompanhe as redes sociais e os canais oficiais da Prefeitura de Batatais para ficar por
-                       dentro dos anÃºncios da organizaÃ§Ã£o.
+                       dentro dos anúncios da organização.
                      </p>
                      <div className="flex flex-col sm:flex-row gap-6">
                        <button
                          className="bg-white/10 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest border border-white/30 cursor-default"
                        >
-                         Vendas Online â€“ Em Breve
+                         Vendas Online – Em Breve
                        </button>
                        <button
                          className="bg-transparent border-2 border-white/30 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest cursor-default"
                        >
-                         Pontos FÃ­sicos â€“ Em Breve
+                         Pontos Físicos – Em Breve
                        </button>
                      </div>
                    </div>
                 </div>
 
-                {/* InformaÃ§Ãµes do Evento / Mapa do Recinto (em breve) */}
+                {/* Informações do Evento / Mapa do Recinto (em breve) */}
                 <div className="grid lg:grid-cols-2 gap-10 md:gap-16">
                   <div className="bg-neutral-900/40 rounded-[3rem] p-10 md:p-12 border border-white/5 space-y-6">
                     <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
-                      InformaÃ§Ãµes do Evento
+                      Informações do Evento
                     </h2>
                     <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                      A estrutura da prÃ³xima ediÃ§Ã£o da Festa do Leite de Batatais ainda estÃ¡ sendo planejada pela organizaÃ§Ã£o.
-                      HorÃ¡rios de abertura do recinto, programaÃ§Ã£o diÃ¡ria, polÃ­ticas de acesso e demais detalhes operacionais
-                      serÃ£o divulgados assim que forem confirmados oficialmente.
+                      A {FESTIVAL_EDITION} da Festa do Leite de Batatais será realizada entre {FESTIVAL_DATES}, no {FESTIVAL_VENUE.name}.
+                      Reconhecida como uma das mais tradicionais festas do interior paulista, a festa reúne música, cultura, tradição
+                      e o fortalecimento do agronegócio em um só espaço. Horários de abertura do recinto, programação diária
+                      completa e políticas de acesso serão divulgados assim que confirmados oficialmente.
                     </p>
                     <ul className="space-y-3 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
                       <li>
-                        â€¢ <span className="text-white">Abertura e encerramento do recinto:</span> em breve.
+                        • <span className="text-white">Período da festa:</span> {FESTIVAL_DATES} ({FESTIVAL_EDITION}).
                       </li>
                       <li>
-                        â€¢ <span className="text-white">Estacionamento oficial:</span> informaÃ§Ãµes sobre localizaÃ§Ã£o e valores serÃ£o
-                        divulgadas prÃ³ximo ao evento.
+                        • <span className="text-white">Abertura e encerramento do recinto:</span> em breve.
                       </li>
                       <li>
-                        â€¢ <span className="text-white">Transporte:</span> linhas especiais de Ã´nibus e orientaÃ§Ãµes de acesso serÃ£o
+                        • <span className="text-white">Estacionamento oficial:</span> informações sobre localização e valores serão
+                        divulgadas próximo ao evento.
+                      </li>
+                      <li>
+                        • <span className="text-white">Transporte:</span> linhas especiais de ônibus e orientações de acesso serão
                         comunicadas nos canais oficiais.
                       </li>
                       <li>
-                        â€¢ <span className="text-white">Itens permitidos e proibidos:</span> regras atualizadas serÃ£o publicadas
+                        • <span className="text-white">Itens permitidos e proibidos:</span> regras atualizadas serão publicadas
                         juntamente com o regulamento do evento.
                       </li>
                     </ul>
                     <p className="text-neutral-500 text-xs md:text-sm leading-relaxed font-light">
-                      Todas as informaÃ§Ãµes desta pÃ¡gina estÃ£o sujeitas a alteraÃ§Ã£o atÃ© a publicaÃ§Ã£o do regulamento oficial da
-                      prÃ³xima ediÃ§Ã£o da Festa do Leite.
+                      Todas as informações desta página estão sujeitas a alteração até a publicação do regulamento oficial da
+                      próxima edição da Festa do Leite.
                     </p>
                   </div>
 
                   <div className="bg-neutral-900/40 rounded-[3rem] p-10 md:p-12 border border-white/5 space-y-6">
                     <h2 className="text-2xl md:text-3xl font-oswald uppercase text-amber-500">
-                      Mapa do Recinto â€“ Em Breve
+                      Mapa do Recinto – Em Breve
                     </h2>
                     <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                      O mapa ilustrativo do recinto da Festa do Leite estÃ¡ em produÃ§Ã£o e serÃ¡ publicado aqui assim que a
-                      distribuiÃ§Ã£o dos espaÃ§os for confirmada pela comissÃ£o organizadora.
+                      O mapa ilustrativo do recinto da Festa do Leite está em produção e será publicado aqui assim que a
+                      distribuição dos espaços for confirmada pela comissão organizadora.
                     </p>
                     <div className="aspect-video rounded-[2rem] border border-dashed border-white/10 bg-neutral-950/60 flex items-center justify-center text-neutral-600 text-xs md:text-sm font-light">
-                      Mapa do recinto da prÃ³xima ediÃ§Ã£o em desenvolvimento.
+                      Mapa do recinto da próxima edição em desenvolvimento.
                     </div>
                     <ul className="space-y-2 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
-                      <li>â€¢ Ãreas previstas: arena de shows e rodeio, pavilhÃµes agro, parque de diversÃµes, praÃ§a de alimentaÃ§Ã£o.</li>
-                      <li>â€¢ Setores de serviÃ§os: banheiros, acessos, estacionamento e pontos de apoio.</li>
+                      <li>• Áreas previstas: arena de shows e rodeio, pavilhões agro, parque de diversões, praça de alimentação.</li>
+                      <li>• Setores de serviços: banheiros, acessos, estacionamento e pontos de apoio.</li>
                     </ul>
                   </div>
                 </div>
@@ -473,23 +481,24 @@ const App: React.FC = () => {
                         Desfile da Festa
                       </h2>
                       <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                        O tradicional desfile da Festa do Leite ocorre geralmente no domingo, marcando o inÃ­cio das festividades antes da abertura oficial no recinto. O evento sai do <strong className="text-white">Lago Artificial OphÃ©lia Borges Silva Alves</strong>, reunindo tropas, carros de boi e alegorias, atraindo cerca de <strong className="text-amber-500">20 mil pessoas</strong>.
+                        O tradicional desfile da Festa do Leite sai do <strong className="text-white">Lago Artificial Ophélia Borges Silva Alves</strong>, reunindo tropas, carros de boi e alegorias, e costuma atrair cerca de <strong className="text-amber-500">20 mil pessoas</strong>.
+                        Na {FESTIVAL_EDITION}, a abertura oficial no recinto está prevista para o dia 8 de julho; a organização divulgará dia e horário específicos do desfile quando confirmados.
                       </p>
                       <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                        O desfile Ã© um dos pontos altos da festa, celebrando a cultura rural e a tradiÃ§Ã£o de Batatais, representando a essÃªncia do agronegÃ³cio e da identidade local.
+                        O desfile é um dos pontos altos da festa, celebrando a cultura rural e a tradição de Batatais, representando a essência do agronegócio e da identidade local.
                       </p>
                       <div className="bg-amber-600/10 border border-amber-600/20 rounded-2xl p-6 mt-6">
                         <div className="flex items-start gap-4">
                           <MapPin className="text-amber-500 flex-shrink-0 mt-1" size={20} />
                           <div className="space-y-2">
-                            <p className="text-white font-semibold text-sm uppercase tracking-wider">Local de SaÃ­da</p>
-                            <p className="text-neutral-300 text-sm font-light">Lago Artificial OphÃ©lia Borges Silva Alves</p>
-                            <p className="text-neutral-400 text-xs font-light">Avenida JoÃ£o Luis de Oliveira, Batatais - SP</p>
+                            <p className="text-white font-semibold text-sm uppercase tracking-wider">Local de Saída</p>
+                            <p className="text-neutral-300 text-sm font-light">Lago Artificial Ophélia Borges Silva Alves</p>
+                            <p className="text-neutral-400 text-xs font-light">Avenida João Luis de Oliveira, Batatais - SP</p>
                           </div>
                         </div>
                       </div>
                       <p className="text-neutral-500 text-xs md:text-sm leading-relaxed font-light mt-4">
-                        A data e horÃ¡rio especÃ­ficos do desfile da prÃ³xima ediÃ§Ã£o serÃ£o divulgados em breve pela organizaÃ§Ã£o.
+                        A data e horário específicos do desfile da {FESTIVAL_EDITION} serão divulgados em breve pela organização.
                       </p>
                     </div>
                   </div>
@@ -506,26 +515,26 @@ const App: React.FC = () => {
                         Camarotes
                       </h2>
                       <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-light">
-                        Os camarotes da Festa do Leite oferecem uma experiÃªncia exclusiva e confortÃ¡vel para empresas, grupos e famÃ­lias que desejam aproveitar os shows e eventos com maior comodidade e privacidade.
+                        Os camarotes da Festa do Leite oferecem uma experiência exclusiva e confortável para empresas, grupos e famílias que desejam aproveitar os shows e eventos com maior comodidade e privacidade.
                       </p>
                       <ul className="space-y-3 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
                         <li>
-                          â€¢ <span className="text-white">Estrutura VIP:</span> espaÃ§os climatizados com vista privilegiada para os shows.
+                          • <span className="text-white">Estrutura VIP:</span> espaços climatizados com vista privilegiada para os shows.
                         </li>
                         <li>
-                          â€¢ <span className="text-white">ServiÃ§os exclusivos:</span> atendimento personalizado, estacionamento reservado e acesso facilitado.
+                          • <span className="text-white">Serviços exclusivos:</span> atendimento personalizado, estacionamento reservado e acesso facilitado.
                         </li>
                         <li>
-                          â€¢ <span className="text-white">Ideal para:</span> empresas que desejam entreter clientes, grupos familiares e quem busca conforto durante o evento.
+                          • <span className="text-white">Ideal para:</span> empresas que desejam entreter clientes, grupos familiares e quem busca conforto durante o evento.
                         </li>
                       </ul>
                       <div className="bg-neutral-950/60 border border-white/10 rounded-2xl p-6 mt-6">
                         <p className="text-neutral-300 text-sm font-light leading-relaxed">
-                          InformaÃ§Ãµes sobre disponibilidade, valores e reservas de camarotes para a prÃ³xima ediÃ§Ã£o serÃ£o divulgadas em breve pela organizaÃ§Ã£o.
+                          Informações sobre disponibilidade, valores e reservas de camarotes para a próxima edição serão divulgadas em breve pela organização.
                         </p>
                       </div>
                       <p className="text-neutral-500 text-xs md:text-sm leading-relaxed font-light mt-4">
-                        Para mais informaÃ§Ãµes sobre camarotes, entre em contato com a Secretaria de Cultura e Turismo de Batatais.
+                        Para mais informações sobre camarotes, entre em contato com a Secretaria de Cultura e Turismo de Batatais.
                       </p>
                     </div>
                   </div>
@@ -539,8 +548,8 @@ const App: React.FC = () => {
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="mb-20 text-center">
-                <h1 className="text-6xl md:text-9xl font-oswald uppercase mb-6 drop-shadow-lg">Ãšltimas <span className="text-amber-500">Novidades</span></h1>
-                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">Acompanhe as notÃ­cias oficiais e atualizaÃ§Ãµes exclusivas.</p>
+                <h1 className="text-6xl md:text-9xl font-oswald uppercase mb-6 drop-shadow-lg">Últimas <span className="text-amber-500">Novidades</span></h1>
+                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">Acompanhe as notícias oficiais e atualizações exclusivas.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {NEWS_DATA.map(news => (
@@ -601,7 +610,7 @@ const App: React.FC = () => {
                   </div>
                   
                   <div className="aspect-video rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                    <img src={selectedArticle.imageUrl} alt={`${selectedArticle.title} - NotÃ­cia Festa do Leite Batatais`} className="w-full h-full object-cover" width="1200" height="675" loading="eager" />
+                    <img src={selectedArticle.imageUrl} alt={`${selectedArticle.title} - Notícia Festa do Leite Batatais`} className="w-full h-full object-cover" width="1200" height="675" loading="eager" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   </div>
 
@@ -616,9 +625,9 @@ const App: React.FC = () => {
                       <Zap size={160} />
                     </div>
                     <h4 className="text-3xl font-oswald uppercase mb-4 text-amber-500">Mantenha-se Informado</h4>
-                    <p className="text-neutral-400 text-lg mb-8 font-light">Receba atualizaÃ§Ãµes exclusivas sobre a programaÃ§Ã£o diretamente no seu e-mail.</p>
+                    <p className="text-neutral-400 text-lg mb-8 font-light">Receba atualizações exclusivas sobre a programação diretamente no seu e-mail.</p>
                     <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-                      <input type="email" placeholder="EndereÃ§o de e-mail" className="bg-white/5 border border-white/10 rounded-2xl px-8 py-5 flex-grow outline-none focus:border-amber-600 transition-all font-light" />
+                      <input type="email" placeholder="Endereço de e-mail" className="bg-white/5 border border-white/10 rounded-2xl px-8 py-5 flex-grow outline-none focus:border-amber-600 transition-all font-light" />
                       <button className="bg-white text-black font-oswald uppercase px-12 py-5 rounded-2xl hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 shadow-lg">Inscrever</button>
                     </div>
                   </div>
@@ -629,7 +638,7 @@ const App: React.FC = () => {
                    <div className="sticky top-40 space-y-16">
                       <div className="space-y-10">
                         <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm flex items-center gap-3">
-                          <div className="h-px w-8 bg-amber-600"></div> Leia TambÃ©m
+                          <div className="h-px w-8 bg-amber-600"></div> Leia Também
                         </h4>
                         <div className="space-y-12">
                            {NEWS_DATA.filter(n => n.id !== selectedArticle.id).map(news => (
@@ -639,7 +648,7 @@ const App: React.FC = () => {
                                 className="group flex flex-col text-left space-y-5"
                              >
                                 <div className="aspect-video rounded-3xl overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 shadow-xl border border-white/5">
-                                  <img src={news.imageUrl} alt={`${news.title} - Leia tambÃ©m Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" width="400" height="225" loading="lazy" />
+                                  <img src={news.imageUrl} alt={`${news.title} - Leia também Festa do Leite Batatais`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" width="400" height="225" loading="lazy" />
                                 </div>
                                 <h5 className="font-oswald uppercase text-2xl leading-tight group-hover:text-amber-500 transition-colors line-clamp-2">
                                   {news.title}
@@ -651,7 +660,7 @@ const App: React.FC = () => {
 
                       <div className="bg-amber-600 p-10 rounded-[3rem] text-white shadow-2xl">
                          <h4 className="text-2xl font-oswald uppercase mb-4">Ingressos</h4>
-                         <p className="text-white/80 text-sm mb-8 font-light leading-relaxed">Garanta sua presenÃ§a no maior evento da regiÃ£o com condiÃ§Ãµes exclusivas online.</p>
+                         <p className="text-white/80 text-sm mb-8 font-light leading-relaxed">Garanta sua presença no maior evento da região com condições exclusivas online.</p>
                          <button onClick={() => scrollToSection('ingressos')} className="w-full bg-black text-white py-5 rounded-2xl font-oswald uppercase text-sm tracking-widest hover:bg-neutral-800 transition-all transform active:scale-95 shadow-xl">Comprar Agora</button>
                       </div>
                    </div>
@@ -665,19 +674,19 @@ const App: React.FC = () => {
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 space-y-6">
-                <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">TradiÃ§Ã£o e HistÃ³ria</h3>
-                <h1 className="text-6xl md:text-9xl font-oswald uppercase leading-[0.85]">{FESTIVAL_NAME} <br /><span className="text-amber-500">A Nossa HistÃ³ria</span></h1>
+                <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">Tradição e História</h3>
+                <h1 className="text-6xl md:text-9xl font-oswald uppercase leading-[0.85]">{FESTIVAL_NAME} <br /><span className="text-amber-500">A Nossa História</span></h1>
               </div>
 
               <div className="grid lg:grid-cols-2 gap-16 lg:gap-32 items-start mb-20">
                 <div className="space-y-8">
                   <div className="space-y-6">
-                    <h2 className="text-4xl md:text-5xl font-oswald uppercase text-amber-500">Uma TradiÃ§Ã£o que Transcende GeraÃ§Ãµes</h2>
+                    <h2 className="text-4xl md:text-5xl font-oswald uppercase text-amber-500">Uma Tradição que Transcende Gerações</h2>
                     <p className="text-neutral-400 text-xl leading-relaxed font-light">
-                      A Festa do Leite de Batatais Ã© um dos eventos mais tradicionais e importantes do interior paulista, celebrando a forte vocaÃ§Ã£o agropecuÃ¡ria da regiÃ£o. Sua histÃ³ria estÃ¡ intrinsecamente ligada Ã  produÃ§Ã£o leiteira local, que por dÃ©cadas impulsionou a economia da cidade.
+                      A Festa do Leite de Batatais é um dos eventos mais tradicionais e importantes do interior paulista, celebrando a forte vocação agropecuária da região. Sua história está intrinsecamente ligada à produção leiteira local, que por décadas impulsionou a economia da cidade.
                     </p>
                     <p className="text-neutral-400 text-xl leading-relaxed font-light">
-                      A festa evoluiu ao longo dos anos, mantendo suas raÃ­zes na cultura rural e incorporando atraÃ§Ãµes que a tornam um evento completo e diverso para todas as idades. A organizaÃ§Ã£o Ã© uma parceria entre a Prefeitura da EstÃ¢ncia TurÃ­stica de Batatais, por meio da Secretaria de Cultura e Turismo, e o Sindicato Rural.
+                      A festa evoluiu ao longo dos anos, mantendo suas raízes na cultura rural e incorporando atrações que a tornam um evento completo e diverso para todas as idades. A organização é uma parceria entre a Prefeitura da Estância Turística de Batatais, por meio da Secretaria de Cultura e Turismo, e o Sindicato Rural.
                     </p>
                   </div>
                 </div>
@@ -686,7 +695,7 @@ const App: React.FC = () => {
                     <img
                       src="/img/Festa do Leite - Batatais SP.jpg"
                       className="w-full h-full object-cover"
-                      alt="Festa do Leite de Batatais - pÃºblico e parque de diversÃµes"
+                      alt="Festa do Leite de Batatais - público e parque de diversões"
                       width="800"
                       height="1000"
                       loading="lazy"
@@ -703,7 +712,7 @@ const App: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-oswald uppercase mb-4">Torneio Leiteiro Nacional</h3>
                   <p className="text-neutral-400 leading-relaxed font-light">
-                    O <strong>Torneio Leiteiro Nacional MultirraÃ§as "Gilberto Meirelles"</strong> Ã© o coraÃ§Ã£o da festa, reunindo criadores de todo o paÃ­s em uma competiÃ§Ã£o criteriosa de ordenhas. O torneio valoriza a genÃ©tica e a produtividade do gado leiteiro, distribuindo prÃªmios significativos e insumos agropecuÃ¡rios. RaÃ§as como Gir Leiteiro, Holandesa e Girolando sÃ£o frequentemente destacadas.
+                    O <strong>Torneio Leiteiro Nacional Multirraças "Gilberto Meirelles"</strong> é o coração da festa, reunindo criadores de todo o país em uma competição criteriosa de ordenhas. O torneio valoriza a genética e a produtividade do gado leiteiro, distribuindo prêmios significativos e insumos agropecuários. Raças como Gir Leiteiro, Holandesa e Girolando são frequentemente destacadas.
                   </p>
                 </div>
 
@@ -713,7 +722,7 @@ const App: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-oswald uppercase mb-4">Shows e Entretenimento</h3>
                   <p className="text-neutral-400 leading-relaxed font-light">
-                    A programaÃ§Ã£o musical Ã© um grande atrativo, com shows de artistas renomados do sertanejo, pagode e outros gÃªneros. O rodeio Ã© uma etapa importante da <strong>Liga Nacional de Rodeios (LNR)</strong>, onde o campeÃ£o garante vaga para a final em Barretos. TradiÃ§Ãµes incluem a eleiÃ§Ã£o da Corte da Festa e o Desfile TÃ­pico de Abertura.
+                    A programação musical é um grande atrativo, com shows de artistas renomados do sertanejo, pagode e outros gêneros. O rodeio é uma etapa importante da <strong>Liga Nacional de Rodeios (LNR)</strong>, onde o campeão garante vaga para a final em Barretos. Tradições incluem a eleição da Corte da Festa e o Desfile Típico de Abertura.
                   </p>
                 </div>
 
@@ -723,7 +732,7 @@ const App: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-oswald uppercase mb-4">Gastronomia</h3>
                   <p className="text-neutral-400 leading-relaxed font-light">
-                    A gastronomia da Festa do Leite Ã© rica e variada, com forte ligaÃ§Ã£o aos derivados do leite e pratos Ã  base de batatas do IAC, uma tradiÃ§Ã£o local. A praÃ§a de alimentaÃ§Ã£o oferece uma ampla variedade de opÃ§Ãµes, com barracas de entidades assistenciais e restaurantes comerciais, alÃ©m de especialidades como pratos Ã  base de milho e culinÃ¡ria caipira.
+                    A gastronomia da Festa do Leite é rica e variada, com forte ligação aos derivados do leite e pratos à base de batatas do IAC, uma tradição local. A praça de alimentação oferece uma ampla variedade de opções, com barracas de entidades assistenciais e restaurantes comerciais, além de especialidades como pratos à base de milho e culinária caipira.
                   </p>
                 </div>
 
@@ -733,7 +742,7 @@ const App: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-oswald uppercase mb-4">Estrutura Completa</h3>
                   <p className="text-neutral-400 leading-relaxed font-light">
-                    A festa acontece no <strong>Centro de Eventos "AntÃ´nio Carlos Prado Baptista"</strong>, um espaÃ§o amplo e bem estruturado com pavilhÃµes para animais, arenas de rodeio e shows, vasta praÃ§a de alimentaÃ§Ã£o, parque de diversÃµes, espaÃ§o empresarial e feira de artes e artesanato.
+                    A festa acontece no <strong>Centro de Eventos "Antônio Carlos Prado Baptista"</strong>, um espaço amplo e bem estruturado com pavilhões para animais, arenas de rodeio e shows, vasta praça de alimentação, parque de diversões, espaço empresarial e feira de artes e artesanato.
                   </p>
                 </div>
               </div>
@@ -744,10 +753,10 @@ const App: React.FC = () => {
                     Mais de 100 Mil Visitantes
                   </h2>
                   <p className="text-xl md:text-2xl text-white/80 font-light leading-relaxed">
-                    A Festa do Leite de Batatais atrai anualmente mais de 100 mil visitantes, consolidando-se como um dos maiores eventos do interior paulista. Ã‰ o ponto de encontro onde o trabalho Ã¡rduo do campo se transforma em celebraÃ§Ã£o, onde a genÃ©tica de elite se encontra com a cultura popular e a mÃºsica sertaneja ecoa com mais forÃ§a.
+                    A Festa do Leite de Batatais atrai anualmente mais de 100 mil visitantes, consolidando-se como um dos maiores eventos do interior paulista. É o ponto de encontro onde o trabalho árduo do campo se transforma em celebração, onde a genética de elite se encontra com a cultura popular e a música sertaneja ecoa com mais força.
                   </p>
                   <p className="text-neutral-400 text-lg font-light italic border-l-2 border-amber-600 pl-8 max-w-2xl mx-auto">
-                    "Celebrar o leite Ã© celebrar a vida, o sustento e a uniÃ£o da nossa gente."
+                    "Celebrar o leite é celebrar a vida, o sustento e a união da nossa gente."
                   </p>
                 </div>
               </div>
@@ -767,7 +776,7 @@ const App: React.FC = () => {
                 <div className="lg:col-span-4 space-y-8">
                   <div className="bg-neutral-900/30 p-10 rounded-[3rem] border border-white/5 space-y-10">
                     {[
-                      { Icon: MapPin, title: "Recinto da Festa", text: "Centro de Eventos AntÃ´nio Carlos Prado Baptista - Av. Moacir Dias de Morais, s/n - Batatais/SP" },
+                      { Icon: MapPin, title: "Recinto da Festa", text: "Centro de Eventos Antônio Carlos Prado Baptista - Av. Moacir Dias de Morais, s/n - Batatais/SP" },
                       { Icon: Phone, title: "Prefeitura de Batatais", text: "(16) 3660-3400" },
                       { Icon: Phone, title: "Secretaria de Cultura e Turismo", text: "(16) 3660-3483" },
                       { Icon: Phone, title: "Sindicato Rural", text: "(16) 3761-2744" }
@@ -814,7 +823,7 @@ const App: React.FC = () => {
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest ml-4">Mensagem ou DÃºvida</label>
+                        <label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest ml-4">Mensagem ou Dúvida</label>
                         <textarea rows={6} className="w-full bg-white/5 border border-white/10 rounded-3xl px-8 py-5 outline-none focus:border-amber-600 transition-all resize-none font-light" />
                       </div>
                       <button className="w-full bg-amber-600 py-6 rounded-2xl font-oswald text-2xl uppercase tracking-widest shadow-2xl flex items-center justify-center gap-4 transition-all hover:bg-amber-500 transform active:scale-[0.98]">
@@ -828,7 +837,7 @@ const App: React.FC = () => {
                        </div>
                        <div className="space-y-4">
                          <h2 className="text-5xl md:text-7xl font-oswald uppercase">Recebido!</h2>
-                         <p className="text-neutral-400 text-xl font-light">Sua mensagem estÃ¡ sendo processada pela nossa equipe.</p>
+                         <p className="text-neutral-400 text-xl font-light">Sua mensagem está sendo processada pela nossa equipe.</p>
                        </div>
                        <button onClick={() => setFormSubmitted(false)} className="text-amber-500 font-bold uppercase text-[10px] tracking-widest border-b border-amber-500/30 pb-2 hover:border-amber-500 transition-all">Enviar outra mensagem</button>
                     </div>
@@ -844,8 +853,8 @@ const App: React.FC = () => {
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
                 <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">Descubra Batatais</h3>
-                <h1 className="text-6xl md:text-9xl font-oswald uppercase">Pontos <span className="text-amber-500">TurÃ­sticos</span></h1>
-                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">ConheÃ§a os principais atrativos da cidade durante sua visita Ã  Festa do Leite</p>
+                <h1 className="text-6xl md:text-9xl font-oswald uppercase">Pontos <span className="text-amber-500">Turísticos</span></h1>
+                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">Conheça os principais atrativos da cidade durante sua visita à Festa do Leite</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
@@ -853,7 +862,7 @@ const App: React.FC = () => {
                   const getCategoryIcon = () => {
                     switch(attraction.category) {
                       case 'Religioso': return Church;
-                      case 'HistÃ³rico': return Map;
+                      case 'Histórico': return Map;
                       case 'Natural': return Camera;
                       case 'Cultural': return Heart;
                       default: return MapPin;
@@ -889,7 +898,7 @@ const App: React.FC = () => {
                           <div className="flex items-start gap-4">
                             <MapPin className="text-amber-500 shrink-0 mt-1" size={20} />
                             <div>
-                              <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">EndereÃ§o</p>
+                              <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">Endereço</p>
                               <p className="text-white text-sm font-light">{attraction.address}</p>
                             </div>
                           </div>
@@ -897,7 +906,7 @@ const App: React.FC = () => {
                             <div className="flex items-start gap-4">
                               <Clock className="text-amber-500 shrink-0 mt-1" size={20} />
                               <div>
-                                <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">HorÃ¡rio de Funcionamento</p>
+                                <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">Horário de Funcionamento</p>
                                 <p className="text-white text-sm font-light">{attraction.openingHours}</p>
                               </div>
                             </div>
@@ -928,7 +937,7 @@ const App: React.FC = () => {
                 })}
               </div>
 
-              {/* Destaque para o SantuÃ¡rio */}
+              {/* Destaque para o Santuário */}
               <div className="mt-24 md:mt-32 bg-gradient-to-br from-amber-600/10 to-amber-900/10 rounded-[4rem] p-12 md:p-20 border border-amber-600/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 hidden md:block">
                   <Church size={400} strokeWidth={1} />
@@ -940,12 +949,12 @@ const App: React.FC = () => {
                     </div>
                   </div>
                   <h2 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">
-                    SantuÃ¡rio Senhor Bom Jesus da Cana Verde
+                    Santuário Senhor Bom Jesus da Cana Verde
                   </h2>
                   <p className="text-xl md:text-2xl text-white/80 font-light leading-relaxed">
-                    O marco inicial da formaÃ§Ã£o urbana de Batatais e o principal patrimÃ´nio histÃ³rico da cidade. 
-                    Abriga o <strong>maior acervo de obras sacras de CÃ¢ndido Portinari do mundo</strong>, com 28 obras incluindo 
-                    a Via Sacra completa. Tombado como patrimÃ´nio histÃ³rico pelo Condephaat, o santuÃ¡rio Ã© parada obrigatÃ³ria 
+                    O marco inicial da formação urbana de Batatais e o principal patrimônio histórico da cidade. 
+                    Abriga o <strong>maior acervo de obras sacras de Cândido Portinari do mundo</strong>, com 28 obras incluindo 
+                    a Via Sacra completa. Tombado como patrimônio histórico pelo Condephaat, o santuário é parada obrigatória 
                     para quem visita Batatais, especialmente durante a Festa do Leite.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
@@ -960,7 +969,7 @@ const App: React.FC = () => {
                       }}
                       className="bg-amber-600 text-white px-12 py-5 rounded-full font-oswald text-lg uppercase tracking-widest hover:bg-amber-500 transition-all transform active:scale-95 shadow-xl"
                     >
-                      Conhecer o SantuÃ¡rio
+                      Conhecer o Santuário
                     </a>
                   </div>
                 </div>
@@ -974,7 +983,7 @@ const App: React.FC = () => {
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
                 <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">Hospedagem</h3>
-                <h1 className="text-6xl md:text-9xl font-oswald uppercase">HotÃ©is e <span className="text-amber-500">Pousadas</span></h1>
+                <h1 className="text-6xl md:text-9xl font-oswald uppercase">Hotéis e <span className="text-amber-500">Pousadas</span></h1>
                 <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">Encontre o lugar perfeito para sua estadia durante a Festa do Leite</p>
               </div>
 
@@ -987,8 +996,8 @@ const App: React.FC = () => {
 
                   const getPriceColor = () => {
                     switch(accommodation.priceRange) {
-                      case 'EconÃ´mico': return 'text-green-500';
-                      case 'MÃ©dio': return 'text-amber-500';
+                      case 'Econômico': return 'text-green-500';
+                      case 'Médio': return 'text-amber-500';
                       case 'Alto': return 'text-purple-500';
                       default: return 'text-white';
                     }
@@ -997,7 +1006,7 @@ const App: React.FC = () => {
                   const getAmenityIcon = (amenity: string) => {
                     if (amenity.toLowerCase().includes('wi-fi') || amenity.toLowerCase().includes('wifi')) return Wifi;
                     if (amenity.toLowerCase().includes('estacionamento')) return Car;
-                    if (amenity.toLowerCase().includes('cafÃ©') || amenity.toLowerCase().includes('restaurante')) return UtensilsCrossed;
+                    if (amenity.toLowerCase().includes('café') || amenity.toLowerCase().includes('restaurante')) return UtensilsCrossed;
                     if (amenity.toLowerCase().includes('piscina')) return Waves;
                     if (amenity.toLowerCase().includes('academia')) return Dumbbell;
                     return Star;
@@ -1034,7 +1043,7 @@ const App: React.FC = () => {
                           <div className="flex items-start gap-4">
                             <MapPin className="text-amber-500 shrink-0 mt-1" size={20} />
                             <div>
-                              <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">EndereÃ§o</p>
+                              <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest mb-1">Endereço</p>
                               <p className="text-white text-sm font-light">{accommodation.address}</p>
                             </div>
                           </div>
@@ -1087,13 +1096,13 @@ const App: React.FC = () => {
 
               <div className="mt-24 md:mt-32 bg-gradient-to-br from-amber-600/10 to-amber-900/10 rounded-[4rem] p-12 md:p-20 border border-amber-600/20 text-center">
                 <h2 className="text-4xl md:text-6xl font-oswald uppercase mb-6 text-amber-500">
-                  Reserve com AntecedÃªncia
+                  Reserve com Antecedência
                 </h2>
                 <p className="text-xl md:text-2xl text-white/80 font-light leading-relaxed max-w-3xl mx-auto mb-8">
-                  Durante a Festa do Leite, a demanda por hospedagem Ã© alta. Recomendamos fazer sua reserva com antecedÃªncia para garantir o melhor preÃ§o e disponibilidade.
+                  Durante a Festa do Leite, a demanda por hospedagem é alta. Recomendamos fazer sua reserva com antecedência para garantir o melhor preço e disponibilidade.
                 </p>
                 <p className="text-neutral-400 text-lg font-light">
-                  Entre em contato diretamente com os estabelecimentos para informaÃ§Ãµes sobre disponibilidade e pacotes especiais para o perÃ­odo do evento.
+                  Entre em contato diretamente com os estabelecimentos para informações sobre disponibilidade e pacotes especiais para o período do evento.
                 </p>
               </div>
             </div>
@@ -1104,25 +1113,25 @@ const App: React.FC = () => {
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto">
               <div className="text-center mb-20 md:mb-32 space-y-6">
-                <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">EstÃ¢ncia TurÃ­stica</h3>
-                <h1 className="text-6xl md:text-9xl font-oswald uppercase">ConheÃ§a <span className="text-amber-500">Batatais</span></h1>
-                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">HistÃ³ria, cultura e tradiÃ§Ã£o no coraÃ§Ã£o do interior paulista</p>
+                <h3 className="text-amber-500 font-oswald text-sm uppercase tracking-[0.4em]">Estância Turística</h3>
+                <h1 className="text-6xl md:text-9xl font-oswald uppercase">Conheça <span className="text-amber-500">Batatais</span></h1>
+                <p className="text-neutral-500 text-lg md:text-xl max-w-2xl mx-auto font-light">História, cultura e tradição no coração do interior paulista</p>
               </div>
 
-              {/* HistÃ³ria */}
+              {/* História */}
               <div className="mb-24 space-y-12">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                   <div className="space-y-8">
-                    <h2 className="text-4xl md:text-5xl font-oswald uppercase text-amber-500">HistÃ³ria e FundaÃ§Ã£o</h2>
+                    <h2 className="text-4xl md:text-5xl font-oswald uppercase text-amber-500">História e Fundação</h2>
                     <div className="space-y-6 text-neutral-400 text-lg leading-relaxed font-light">
                       <p>
-                        A histÃ³ria de Batatais remonta Ã  <strong className="text-white">doaÃ§Ã£o de uma sesmaria em 5 de agosto de 1728</strong>, marcando o inÃ­cio de sua ocupaÃ§Ã£o. A cidade foi oficialmente instalada como vila em <strong className="text-white">1839</strong>.
+                        A história de Batatais remonta à <strong className="text-white">doação de uma sesmaria em 5 de agosto de 1728</strong>, marcando o início de sua ocupação. A cidade foi oficialmente instalada como vila em <strong className="text-white">1839</strong>.
                       </p>
                       <p>
-                        Acredita-se que o nome "Batatais" tenha origem nas <strong className="text-white">extensas plantaÃ§Ãµes de batatas (ou batatas-doces)</strong> cultivadas pelos indÃ­genas locais, descobertas pelos primeiros bandeirantes e colonizadores. A fundaÃ§Ã£o da cidade estÃ¡ ligada Ã  ocupaÃ§Ã£o de sesmarias por entrantes mineiros e paulistas no inÃ­cio do sÃ©culo XVIII.
+                        Acredita-se que o nome "Batatais" tenha origem nas <strong className="text-white">extensas plantações de batatas (ou batatas-doces)</strong> cultivadas pelos indígenas locais, descobertas pelos primeiros bandeirantes e colonizadores. A fundação da cidade está ligada à ocupação de sesmarias por entrantes mineiros e paulistas no início do século XVIII.
                       </p>
                       <p className="text-amber-500 font-bold">
-                        Batatais ostenta o tÃ­tulo de <strong>EstÃ¢ncia TurÃ­stica</strong>, reconhecendo seu potencial histÃ³rico, artÃ­stico e cultural.
+                        Batatais ostenta o título de <strong>Estância Turística</strong>, reconhecendo seu potencial histórico, artístico e cultural.
                       </p>
                     </div>
                   </div>
@@ -1142,9 +1151,9 @@ const App: React.FC = () => {
                   </div>
                   <h3 className="text-2xl font-oswald uppercase mb-4">Geografia</h3>
                   <ul className="space-y-3 text-neutral-400 leading-relaxed font-light">
-                    <li><strong className="text-white">RegiÃ£o:</strong> {BATATAIS_INFO.geography.region}</li>
-                    <li><strong className="text-white">RegiÃ£o Metropolitana:</strong> {BATATAIS_INFO.geography.metropolitanRegion}</li>
-                    <li><strong className="text-white">PopulaÃ§Ã£o:</strong> {BATATAIS_INFO.geography.population}</li>
+                    <li><strong className="text-white">Região:</strong> {BATATAIS_INFO.geography.region}</li>
+                    <li><strong className="text-white">Região Metropolitana:</strong> {BATATAIS_INFO.geography.metropolitanRegion}</li>
+                    <li><strong className="text-white">População:</strong> {BATATAIS_INFO.geography.population}</li>
                     <li><strong className="text-white">Altitude:</strong> {BATATAIS_INFO.geography.altitude}</li>
                     <li><strong className="text-white">Clima:</strong> {BATATAIS_INFO.geography.climate}</li>
                   </ul>
@@ -1185,17 +1194,17 @@ const App: React.FC = () => {
                     <h3 className="text-2xl font-oswald uppercase mb-6 text-white">Rodovias</h3>
                     <ul className="space-y-4 text-neutral-400 leading-relaxed font-light">
                       <li><strong className="text-white">Principal:</strong> {BATATAIS_INFO.highways.main}</li>
-                      <li><strong className="text-white">SecundÃ¡ria:</strong> {BATATAIS_INFO.highways.secondary}</li>
+                      <li><strong className="text-white">Secundária:</strong> {BATATAIS_INFO.highways.secondary}</li>
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-oswald uppercase mb-6 text-white">DistÃ¢ncias</h3>
+                    <h3 className="text-2xl font-oswald uppercase mb-6 text-white">Distâncias</h3>
                     <ul className="space-y-4 text-neutral-400 leading-relaxed font-light">
-                      <li><strong className="text-white">RibeirÃ£o Preto:</strong> {BATATAIS_INFO.distances.ribeiraoPreto}</li>
-                      <li><strong className="text-white">SÃ£o Paulo:</strong> {BATATAIS_INFO.distances.saoPaulo}</li>
+                      <li><strong className="text-white">Ribeirão Preto:</strong> {BATATAIS_INFO.distances.ribeiraoPreto}</li>
+                      <li><strong className="text-white">São Paulo:</strong> {BATATAIS_INFO.distances.saoPaulo}</li>
                       <li><strong className="text-white">Franca:</strong> {BATATAIS_INFO.distances.franca}</li>
                     </ul>
-                    <p className="text-neutral-500 text-sm mt-4 italic">Transporte intermunicipal por Ã´nibus Ã© frequente, conectando Batatais a RibeirÃ£o Preto e Franca.</p>
+                    <p className="text-neutral-500 text-sm mt-4 italic">Transporte intermunicipal por ônibus é frequente, conectando Batatais a Ribeirão Preto e Franca.</p>
                   </div>
                 </div>
               </div>
@@ -1208,12 +1217,12 @@ const App: React.FC = () => {
                     <div>
                       <h3 className="text-xl font-oswald uppercase mb-4 text-white">Temperaturas</h3>
                       <p className="text-neutral-400 leading-relaxed font-light">
-                        <strong className="text-white">MÃ­nima:</strong> {BATATAIS_INFO.climateJuly.minTemp}<br />
-                        <strong className="text-white">MÃ¡xima:</strong> {BATATAIS_INFO.climateJuly.maxTemp}
+                        <strong className="text-white">Mínima:</strong> {BATATAIS_INFO.climateJuly.minTemp}<br />
+                        <strong className="text-white">Máxima:</strong> {BATATAIS_INFO.climateJuly.maxTemp}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-oswald uppercase mb-4 text-white">EstaÃ§Ã£o</h3>
+                      <h3 className="text-xl font-oswald uppercase mb-4 text-white">Estação</h3>
                       <p className="text-neutral-400 leading-relaxed font-light">
                         {BATATAIS_INFO.climateJuly.season}<br />
                         <span className="text-sm italic">{BATATAIS_INFO.climateJuly.precipitation}</span>
@@ -1227,15 +1236,15 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* Contatos de EmergÃªncia */}
+              {/* Contatos de Emergência */}
               <div className="bg-gradient-to-br from-red-600/10 to-red-900/10 rounded-[4rem] p-12 md:p-20 border border-red-600/20">
-                <h2 className="text-4xl md:text-5xl font-oswald uppercase text-red-400 mb-12 text-center">Contatos de EmergÃªncia</h2>
+                <h2 className="text-4xl md:text-5xl font-oswald uppercase text-red-400 mb-12 text-center">Contatos de Emergência</h2>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
                   <div className="text-center">
                     <div className="w-16 h-16 bg-red-600/20 rounded-2xl flex items-center justify-center text-red-400 mx-auto mb-4 border border-red-600/30">
                       <Phone size={32} />
                     </div>
-                    <h3 className="text-lg font-oswald uppercase mb-2 text-white">PolÃ­cia Militar</h3>
+                    <h3 className="text-lg font-oswald uppercase mb-2 text-white">Polícia Militar</h3>
                     <p className="text-2xl font-bold text-red-400">{BATATAIS_INFO.emergencyContacts.police}</p>
                   </div>
                   <div className="text-center">
@@ -1268,66 +1277,66 @@ const App: React.FC = () => {
         {currentPage === 'privacy' && (
           <section className="pt-32 md:pt-48 pb-24 md:pb-40 px-4">
             <div className="container mx-auto max-w-4xl space-y-10">
-              <h1 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">PolÃ­tica de Privacidade</h1>
+              <h1 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">Política de Privacidade</h1>
               <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
-                Esta pÃ¡gina descreve como o portal oficial da Festa do Leite de Batatais trata as informaÃ§Ãµes coletadas dos
-                visitantes. O site Ã© institucional e tem como objetivo divulgar a Festa do Leite, a cidade de Batatais, seus
-                pontos turÃ­sticos, hotÃ©is e pousadas.
+                Esta página descreve como o portal oficial da Festa do Leite de Batatais trata as informações coletadas dos
+                visitantes. O site é institucional e tem como objetivo divulgar a Festa do Leite, a cidade de Batatais, seus
+                pontos turísticos, hotéis e pousadas.
               </p>
               <div className="space-y-6 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Coleta de dados</h2>
                   <p>
-                    Podemos coletar dados fornecidos voluntariamente por vocÃª, como nome e e-mail, apenas quando vocÃª preencher
-                    formulÃ¡rios de contato ou inscriÃ§Ã£o em newsletters. NÃ£o coletamos informaÃ§Ãµes sensÃ­veis nem dados pessoais
-                    desnecessÃ¡rios para o funcionamento do site.
+                    Podemos coletar dados fornecidos voluntariamente por você, como nome e e-mail, apenas quando você preencher
+                    formulários de contato ou inscrição em newsletters. Não coletamos informações sensíveis nem dados pessoais
+                    desnecessários para o funcionamento do site.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Uso das informaÃ§Ãµes</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Uso das informações</h2>
                   <p>
-                    Os dados fornecidos sÃ£o utilizados exclusivamente para responder Ã s suas mensagens, fornecer informaÃ§Ãµes
-                    sobre a Festa do Leite e, quando autorizado, enviar comunicaÃ§Ãµes institucionais relacionadas ao evento.
-                    NÃ£o vendemos, alugamos ou compartilhamos seus dados com terceiros para fins comerciais.
+                    Os dados fornecidos são utilizados exclusivamente para responder às suas mensagens, fornecer informações
+                    sobre a Festa do Leite e, quando autorizado, enviar comunicações institucionais relacionadas ao evento.
+                    Não vendemos, alugamos ou compartilhamos seus dados com terceiros para fins comerciais.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Cookies e ferramentas de anÃ¡lise</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Cookies e ferramentas de análise</h2>
                   <p>
-                    O site pode utilizar cookies e ferramentas de anÃ¡lise de trÃ¡fego (como mÃ©tricas de acesso) para melhorar a
-                    experiÃªncia de navegaÃ§Ã£o e entender quais conteÃºdos sÃ£o mais relevantes para o pÃºblico. VocÃª pode gerenciar
-                    o uso de cookies diretamente nas configuraÃ§Ãµes do seu navegador.
+                    O site pode utilizar cookies e ferramentas de análise de tráfego (como métricas de acesso) para melhorar a
+                    experiência de navegação e entender quais conteúdos são mais relevantes para o público. Você pode gerenciar
+                    o uso de cookies diretamente nas configurações do seu navegador.
                   </p>
                 </div>
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Links externos</h2>
                   <p>
-                    O portal contÃ©m links para sites de terceiros, como redes sociais, hotÃ©is, pousadas e Ã³rgÃ£os oficiais. NÃ£o
-                    nos responsabilizamos pelas prÃ¡ticas de privacidade ou conteÃºdo desses sites externos. Recomendamos que
-                    vocÃª consulte as polÃ­ticas de privacidade de cada serviÃ§o acessado.
+                    O portal contém links para sites de terceiros, como redes sociais, hotéis, pousadas e órgãos oficiais. Não
+                    nos responsabilizamos pelas práticas de privacidade ou conteúdo desses sites externos. Recomendamos que
+                    você consulte as políticas de privacidade de cada serviço acessado.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">SeguranÃ§a das informaÃ§Ãµes</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Segurança das informações</h2>
                   <p>
-                    Adotamos boas prÃ¡ticas razoÃ¡veis de seguranÃ§a para proteger as informaÃ§Ãµes enviadas por meio do site.
-                    Contudo, nenhum sistema Ã© totalmente isento de riscos, e nÃ£o podemos garantir seguranÃ§a absoluta das
-                    comunicaÃ§Ãµes realizadas pela internet.
+                    Adotamos boas práticas razoáveis de segurança para proteger as informações enviadas por meio do site.
+                    Contudo, nenhum sistema é totalmente isento de riscos, e não podemos garantir segurança absoluta das
+                    comunicações realizadas pela internet.
                   </p>
                 </div>
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Direitos do titular de dados</h2>
                   <p>
-                    Se desejar atualizar, corrigir ou solicitar a remoÃ§Ã£o de seus dados pessoais, entre em contato pelos canais
-                    disponÃ­veis na pÃ¡gina de contato. Faremos o possÃ­vel para atender Ã s solicitaÃ§Ãµes em prazo razoÃ¡vel,
-                    respeitando a legislaÃ§Ã£o aplicÃ¡vel.
+                    Se desejar atualizar, corrigir ou solicitar a remoção de seus dados pessoais, entre em contato pelos canais
+                    disponíveis na página de contato. Faremos o possível para atender às solicitações em prazo razoável,
+                    respeitando a legislação aplicável.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">AtualizaÃ§Ãµes desta polÃ­tica</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Atualizações desta política</h2>
                   <p>
-                    Esta PolÃ­tica de Privacidade pode ser atualizada periodicamente para refletir melhorias do site ou mudanÃ§as
-                    legais. Recomendamos que vocÃª revise esta pÃ¡gina sempre que retornar ao portal.
+                    Esta Política de Privacidade pode ser atualizada periodicamente para refletir melhorias do site ou mudanças
+                    legais. Recomendamos que você revise esta página sempre que retornar ao portal.
                   </p>
                 </div>
               </div>
@@ -1340,65 +1349,65 @@ const App: React.FC = () => {
             <div className="container mx-auto max-w-4xl space-y-10">
               <h1 className="text-4xl md:text-6xl font-oswald uppercase text-amber-500">Termos de Uso</h1>
               <p className="text-neutral-400 text-sm md:text-base leading-relaxed font-light">
-                Ao acessar e utilizar o portal oficial da Festa do Leite de Batatais, vocÃª concorda com os termos e condiÃ§Ãµes
-                descritos nesta pÃ¡gina. Caso nÃ£o concorde com algum dos pontos abaixo, recomendamos que interrompa o uso do
+                Ao acessar e utilizar o portal oficial da Festa do Leite de Batatais, você concorda com os termos e condições
+                descritos nesta página. Caso não concorde com algum dos pontos abaixo, recomendamos que interrompa o uso do
                 site.
               </p>
               <div className="space-y-6 text-neutral-400 text-sm md:text-base leading-relaxed font-light">
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Finalidade do site</h2>
                   <p>
-                    O portal tem carÃ¡ter exclusivamente informativo e institucional, destinado a divulgar a Festa do Leite de
-                    Batatais, sua programaÃ§Ã£o, pontos turÃ­sticos da cidade e opÃ§Ãµes de hospedagem. As informaÃ§Ãµes podem ser
-                    ajustadas ou atualizadas a qualquer momento, sem aviso prÃ©vio.
+                    O portal tem caráter exclusivamente informativo e institucional, destinado a divulgar a Festa do Leite de
+                    Batatais, sua programação, pontos turísticos da cidade e opções de hospedagem. As informações podem ser
+                    ajustadas ou atualizadas a qualquer momento, sem aviso prévio.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Responsabilidade sobre informaÃ§Ãµes</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Responsabilidade sobre informações</h2>
                   <p>
-                    Buscamos manter todas as informaÃ§Ãµes corretas e atualizadas; no entanto, nÃ£o garantimos que o conteÃºdo
-                    esteja livre de erros, omissÃµes ou desatualizaÃ§Ãµes. Detalhes como datas, horÃ¡rios, valores de ingressos ou
-                    condiÃ§Ãµes de eventos podem mudar conforme decisÃ£o da organizaÃ§Ã£o ou de terceiros.
+                    Buscamos manter todas as informações corretas e atualizadas; no entanto, não garantimos que o conteúdo
+                    esteja livre de erros, omissões ou desatualizações. Detalhes como datas, horários, valores de ingressos ou
+                    condições de eventos podem mudar conforme decisão da organização ou de terceiros.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Uso do conteÃºdo</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Uso do conteúdo</h2>
                   <p>
-                    Textos, imagens, identidade visual e demais elementos presentes no site sÃ£o protegidos por direitos
-                    autorais e/ou de marca. Ã‰ vedada a reproduÃ§Ã£o nÃ£o autorizada do conteÃºdo para fins comerciais. O uso
-                    pessoal e nÃ£o comercial, com citaÃ§Ã£o da fonte, Ã© permitido.
+                    Textos, imagens, identidade visual e demais elementos presentes no site são protegidos por direitos
+                    autorais e/ou de marca. É vedada a reprodução não autorizada do conteúdo para fins comerciais. O uso
+                    pessoal e não comercial, com citação da fonte, é permitido.
                   </p>
                 </div>
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Links para terceiros</h2>
                   <p>
-                    O portal pode conter links para sites de terceiros (como hotÃ©is, pousadas, pontos turÃ­sticos, Ã³rgÃ£os
-                    pÃºblicos e redes sociais). NÃ£o temos controle sobre esses sites e nÃ£o nos responsabilizamos por seu
-                    conteÃºdo, disponibilidade ou prÃ¡ticas. O acesso a esses serviÃ§os Ã© de responsabilidade exclusiva do
-                    usuÃ¡rio.
+                    O portal pode conter links para sites de terceiros (como hotéis, pousadas, pontos turísticos, órgãos
+                    públicos e redes sociais). Não temos controle sobre esses sites e não nos responsabilizamos por seu
+                    conteúdo, disponibilidade ou práticas. O acesso a esses serviços é de responsabilidade exclusiva do
+                    usuário.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Comportamento do usuÃ¡rio</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Comportamento do usuário</h2>
                   <p>
-                    NÃ£o Ã© permitido utilizar o site para qualquer finalidade ilegal, ofensiva, difamatÃ³ria ou que viole direitos
-                    de terceiros. TambÃ©m nÃ£o Ã© permitido tentar comprometer a seguranÃ§a ou o funcionamento do portal por meio de
-                    scripts, automaÃ§Ãµes ou ataques de qualquer natureza.
+                    Não é permitido utilizar o site para qualquer finalidade ilegal, ofensiva, difamatória ou que viole direitos
+                    de terceiros. Também não é permitido tentar comprometer a segurança ou o funcionamento do portal por meio de
+                    scripts, automações ou ataques de qualquer natureza.
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-oswald uppercase text-white mb-2">AlteraÃ§Ãµes nos termos</h2>
+                  <h2 className="text-lg font-oswald uppercase text-white mb-2">Alterações nos termos</h2>
                   <p>
-                    Estes Termos de Uso podem ser alterados ou atualizados a qualquer momento, sem aviso prÃ©vio. A versÃ£o mais
-                    recente estarÃ¡ sempre disponÃ­vel nesta pÃ¡gina. O uso continuado do site apÃ³s alteraÃ§Ãµes implica aceitaÃ§Ã£o
+                    Estes Termos de Uso podem ser alterados ou atualizados a qualquer momento, sem aviso prévio. A versão mais
+                    recente estará sempre disponível nesta página. O uso continuado do site após alterações implica aceitação
                     dos novos termos.
                   </p>
                 </div>
                 <div>
                   <h2 className="text-lg font-oswald uppercase text-white mb-2">Contato</h2>
                   <p>
-                    Em caso de dÃºvidas sobre estes Termos de Uso ou sobre o funcionamento do site, utilize os canais indicados
-                    na pÃ¡gina de contato para falar com a organizaÃ§Ã£o da Festa do Leite de Batatais.
+                    Em caso de dúvidas sobre estes Termos de Uso ou sobre o funcionamento do site, utilize os canais indicados
+                    na página de contato para falar com a organização da Festa do Leite de Batatais.
                   </p>
                 </div>
               </div>
@@ -1422,7 +1431,7 @@ const App: React.FC = () => {
                 />
                 <span className="font-oswald text-2xl uppercase tracking-widest hidden sm:block">{FESTIVAL_NAME}</span>
               </div>
-              <p className="text-neutral-500 text-lg leading-relaxed max-w-xs font-light">O coraÃ§Ã£o de Batatais bate mais forte no recinto da Festa do Leite.</p>
+              <p className="text-neutral-500 text-lg leading-relaxed max-w-xs font-light">O coração de Batatais bate mais forte no recinto da Festa do Leite.</p>
               <div className="flex gap-6">
                 <a href="https://www.instagram.com/festadoleitedebatataisoficial" target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-amber-500 transition-colors" title="Instagram">
                   <Instagram size={24} />
@@ -1440,8 +1449,8 @@ const App: React.FC = () => {
               <div className="space-y-8">
                 <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm">Portal</h4>
                 <ul className="space-y-4 text-neutral-400 font-bold text-[10px] uppercase tracking-[0.2em]">
-                  <li><button onClick={() => navigateTo('home')} className="hover:text-white transition-colors">InÃ­cio</button></li>
-                  <li><button onClick={() => navigateTo('news')} className="hover:text-white transition-colors">NotÃ­cias</button></li>
+                  <li><button onClick={() => navigateTo('home')} className="hover:text-white transition-colors">Início</button></li>
+                  <li><button onClick={() => navigateTo('news')} className="hover:text-white transition-colors">Notícias</button></li>
                   <li><button onClick={() => navigateTo('tourism')} className="hover:text-white transition-colors">Turismo</button></li>
                   <li><button onClick={() => navigateTo('accommodation')} className="hover:text-white transition-colors">Hospedagem</button></li>
                   <li><button onClick={() => navigateTo('batatais')} className="hover:text-white transition-colors">Batatais</button></li>
@@ -1450,11 +1459,11 @@ const App: React.FC = () => {
                 </ul>
               </div>
               <div className="space-y-8">
-                <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm">InformaÃ§Ãµes</h4>
+                <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm">Informações</h4>
                 <ul className="space-y-4 text-neutral-400 font-bold text-[10px] uppercase tracking-[0.2em]">
                   <li><button className="hover:text-white transition-colors">Imprensa</button></li>
                   <li><button className="hover:text-white transition-colors">Expositores</button></li>
-                  <li><button className="hover:text-white transition-colors">TransparÃªncia</button></li>
+                  <li><button className="hover:text-white transition-colors">Transparência</button></li>
                 </ul>
               </div>
             </div>
@@ -1462,14 +1471,14 @@ const App: React.FC = () => {
             <div className="space-y-8">
               <h4 className="font-oswald uppercase text-amber-500 tracking-widest text-sm">Onde Estamos</h4>
               <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em] leading-loose">
-                Centro de Eventos AntÃ´nio Prado Baptista<br />
+                Centro de Eventos Antônio Prado Baptista<br />
                 Av. Dr. Oswaldo Scatena, s/n<br />
-                Batatais - SÃ£o Paulo
+                Batatais - São Paulo
               </p>
             </div>
           </div>
           <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 text-[9px] font-bold text-neutral-600 uppercase tracking-widest">
-            <p>Â© {FESTIVAL_NAME}. Todos os direitos reservados.</p>
+            <p>© {FESTIVAL_NAME}. Todos os direitos reservados.</p>
             <p className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest text-center md:text-right">
               Site desenvolvido por{' '}
               <a
