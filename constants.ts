@@ -46,7 +46,7 @@ export const NEWS_DATA: NewsItem[] = [
     ],
     date: 'Mar 2026',
     category: 'Shows',
-    imageUrl: '/img/logo-festa.png'
+    imageUrl: '/img/festa-do-leite-2026-primeira-noticia.jpeg'
   },
   {
     id: '2',
