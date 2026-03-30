@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 
+# Informações para assistentes de IA (visão geral do site)
+# https://festadoleitebatatais.com.br/llms.txt
+
 # Sitemap
 Sitemap: https://festadoleitebatatais.com.br/sitemap.xml
 
