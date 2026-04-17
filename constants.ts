@@ -24,6 +24,7 @@ export interface NewsItem {
   title: string;
   excerpt: string;
   fullText: string[];
+  fullImageUrl?: string;
   date: string;
   category: 'Shows' | 'Agro' | 'Serviço';
   imageUrl: string;
@@ -45,6 +46,7 @@ export const NEWS_DATA: NewsItem[] = [
       'Confira as atrações confirmadas por data: 8 de julho (quarta-feira) com Clube da Viola e Edson & Hudson; 9 de julho (quinta-feira, feriado e entrada gratuita) com Dilsinho; 10 de julho (sexta-feira) com Jads & Jadson e Júnior & Cezar; 11 de julho (sábado) com Felipe & Rodrigo e Country Beat; 12 de julho (domingo, entrada gratuita) com Maria Clara & JP e Trio Parada Dura.',
       'Prepare-se para viver mais uma edição inesquecível de um dos maiores eventos do interior paulista.'
     ],
+    fullImageUrl: '/img/ingressos antecipados.jpg',
     date: 'Abr 2026',
     category: 'Serviço',
     imageUrl: '/img/ingressos antecipados.jpg'

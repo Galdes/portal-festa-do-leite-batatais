@@ -66,6 +66,30 @@ type ArticlePageProps = {
   scrollToSection: (id: string) => void;
 };
 
+const renderParagraphWithLinks = (paragraph: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const singleUrlRegex = /^https?:\/\/[^\s]+$/;
+  const parts = paragraph.split(urlRegex);
+
+  return parts.map((part, idx) => {
+    if (singleUrlRegex.test(part)) {
+      return (
+        <a
+          key={`${part}-${idx}`}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-amber-500 underline underline-offset-4 hover:text-amber-400 break-all"
+        >
+          {part}
+        </a>
+      );
+    }
+
+    return <React.Fragment key={`${part}-${idx}`}>{part}</React.Fragment>;
+  });
+};
+
 const ArticlePage: React.FC<ArticlePageProps> = ({ scrollToSection }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -120,10 +144,21 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ scrollToSection }) => {
             <div className="space-y-8 text-neutral-300 text-xl md:text-2xl leading-[1.6] font-light">
               {article.fullText.map((paragraph, i) => (
                 <p key={i} className="first-letter:text-5xl first-letter:font-oswald first-letter:text-amber-500 first-letter:mr-3 first-letter:float-left">
-                  {paragraph}
+                  {renderParagraphWithLinks(paragraph)}
                 </p>
               ))}
             </div>
+
+            {article.fullImageUrl && (
+              <div className="rounded-[2.5rem] border border-white/10 bg-black/30 p-4 md:p-6 shadow-2xl">
+                <img
+                  src={article.fullImageUrl}
+                  alt={`${article.title} - arte completa`}
+                  className="w-full h-auto object-contain rounded-[2rem]"
+                  loading="lazy"
+                />
+              </div>
+            )}
 
             <div className="bg-neutral-900/40 p-12 rounded-[3rem] border border-white/5 mt-20 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-8 opacity-5 -rotate-12">
