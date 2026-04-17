@@ -526,7 +526,7 @@ const App: React.FC = () => {
                             <div className="absolute bottom-0 left-0 p-8 md:p-10 w-full">
                               <h3 className="text-3xl md:text-4xl font-oswald uppercase mb-3 group-hover:text-amber-500 transition-colors">{artist.name}</h3>
                               <div className="flex items-center gap-2 text-white/60 text-[10px] md:text-xs uppercase font-bold tracking-widest bg-black/40 backdrop-blur-md w-fit px-4 py-2 rounded-full border border-white/10">
-                                <Clock size={14} /> Palco Principal • 22h30
+                                <Clock size={14} /> Palco Principal
                               </div>
                             </div>
                           </div>
