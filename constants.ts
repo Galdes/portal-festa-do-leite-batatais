@@ -109,14 +109,14 @@ export function getNewsBySlug(slug: string | undefined): NewsItem | undefined {
 }
 
 export const PERFORMERS: Performer[] = [
-  { name: 'Clube da Viola', date: '08 Jul · qua', imageUrl: 'https://picsum.photos/seed/clubedaviola/800/1000' },
-  { name: 'Edson & Hudson', date: '08 Jul · qua', imageUrl: 'https://picsum.photos/seed/edsonhudson/800/1000' },
-  { name: 'Dilsinho', date: '09 Jul · qui', imageUrl: 'https://picsum.photos/seed/dilsinho/800/1000' },
-  { name: 'Júnior & Cezar', date: '10 Jul · sex', imageUrl: 'https://picsum.photos/seed/juniorcezar/800/1000' },
-  { name: 'Jads & Jadson', date: '10 Jul · sex', imageUrl: 'https://picsum.photos/seed/jadsjadson/800/1000' },
-  { name: 'Felipe & Rodrigo', date: '11 Jul · sáb', imageUrl: 'https://picsum.photos/seed/feliperodrigo/800/1000' },
-  { name: 'Country Beat', date: '11 Jul · sáb', imageUrl: 'https://picsum.photos/seed/countrybeat/800/1000' },
-  { name: 'Trio Parada Dura', date: '12 Jul · dom', imageUrl: 'https://picsum.photos/seed/trioparadadura/800/1000' }
+  { name: 'Clube da Viola', date: '08 Jul · qua', imageUrl: '/img/shows/08-07 - clube da viola.jpg' },
+  { name: 'Edson & Hudson', date: '08 Jul · qua', imageUrl: '/img/shows/08-07 edson e hudson.jpg' },
+  { name: 'Dilsinho', date: '09 Jul · qui', imageUrl: '/img/shows/09-07 dilsinho.jpg' },
+  { name: 'Júnior & Cezar', date: '10 Jul · sex', imageUrl: '/img/shows/10-07 junior e cezar.jpg' },
+  { name: 'Jads & Jadson', date: '10 Jul · sex', imageUrl: '/img/shows/10-07 jads e jadson.jpg' },
+  { name: 'Felipe & Rodrigo', date: '11 Jul · sáb', imageUrl: '/img/shows/11-07 felipe e rodrigo.jpg' },
+  { name: 'Country Beat', date: '11 Jul · sáb', imageUrl: '/img/shows/11-07 countrybeat.jpg' },
+  { name: 'Trio Parada Dura', date: '12 Jul · dom', imageUrl: '/img/shows/12-07 trio parada dura.jpg' }
 ];
 
 export const SPONSORS: Sponsor[] = [
