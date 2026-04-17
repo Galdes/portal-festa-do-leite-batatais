@@ -31,6 +31,25 @@ export interface NewsItem {
 
 export const NEWS_DATA: NewsItem[] = [
   {
+    id: '4',
+    slug: 'ingressos-antecipados-49-festa-do-leite-batatais',
+    title: 'Saiba como adquirir ingressos antecipados para a 49ª Festa do Leite de Batatais',
+    excerpt:
+      'As vendas online já estão abertas, com entrada gratuita em 9 e 12 de julho e ingressos pagos nos dias 8, 10 e 11.',
+    fullText: [
+      'As vendas online de ingressos para a 49ª Festa do Leite de Batatais já estão abertas. A tradicional festa será realizada entre os dias 8 e 12 de julho, no Centro de Eventos "Antônio Carlos Prado Baptista".',
+      'A entrada será gratuita em dois dias da programação: 9 de julho (quinta-feira), com show de Dilsinho, e 12 de julho (domingo), com Maria Clara & JP e Trio Parada Dura.',
+      'Nos demais dias (8, 10 e 11 de julho), é preciso adquirir ingresso. Os valores seguem os mesmos do ano passado: ingresso individual por R$ 50 (inteira) e R$ 25 (meia), além do pacote promocional para os 3 dias pagos por R$ 140 (inteira) e R$ 70 (meia).',
+      'Os ingressos podem ser adquiridos de forma prática e segura pela internet, por meio da plataforma Quero2 Ingressos: https://q2ingressos.com.br/eventgroup/49-festa-do-leite-2026. O link também está disponível na bio do perfil oficial no Instagram (@festadoleitedebatataisoficial).',
+      'Em breve, também serão divulgados pontos de venda físicos na cidade e região.',
+      'Confira as atrações confirmadas por data: 8 de julho (quarta-feira) com Clube da Viola e Edson & Hudson; 9 de julho (quinta-feira, feriado e entrada gratuita) com Dilsinho; 10 de julho (sexta-feira) com Jads & Jadson e Júnior & Cezar; 11 de julho (sábado) com Felipe & Rodrigo e Country Beat; 12 de julho (domingo, entrada gratuita) com Maria Clara & JP e Trio Parada Dura.',
+      'Prepare-se para viver mais uma edição inesquecível de um dos maiores eventos do interior paulista.'
+    ],
+    date: 'Abr 2026',
+    category: 'Serviço',
+    imageUrl: '/img/ingressos antecipados.jpg'
+  },
+  {
     id: '1',
     slug: 'festa-do-leite-2026-49-edicao',
     title: '49ª Festa do Leite: 8 a 12 de julho de 2026 no Centro de Eventos',
