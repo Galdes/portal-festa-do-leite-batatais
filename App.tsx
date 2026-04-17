@@ -50,6 +50,7 @@ import {
   FESTIVAL_SLOGAN,
   FESTIVAL_DATES,
   FESTIVAL_EDITION,
+  TICKET_SALES_URL,
   PROGRAM_DAY_LABELS,
   PERFORMERS, 
   NEWS_DATA,
@@ -94,6 +95,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ scrollToSection }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const article = getNewsBySlug(slug);
+  const openTicketSales = () => window.open(TICKET_SALES_URL, '_blank', 'noopener,noreferrer');
 
   if (!article) {
     return <Navigate to="/noticias" replace />;
@@ -219,7 +221,7 @@ const ArticlePage: React.FC<ArticlePageProps> = ({ scrollToSection }) => {
                 </p>
                 <button
                   type="button"
-                  onClick={() => scrollToSection('ingressos')}
+                  onClick={openTicketSales}
                   className="w-full bg-black text-white py-5 rounded-2xl font-oswald uppercase text-sm tracking-widest hover:bg-neutral-800 transition-all transform active:scale-95 shadow-xl"
                 >
                   Comprar Agora
@@ -272,6 +274,10 @@ const App: React.FC = () => {
     }
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+  const openTicketSales = () => {
+    setIsMenuOpen(false);
+    window.open(TICKET_SALES_URL, '_blank', 'noopener,noreferrer');
+  };
 
   const currentPerformers = useMemo(() => {
     return PERFORMERS.filter(p => p.date === activeDay);
@@ -320,7 +326,7 @@ const App: React.FC = () => {
               </Link>
             ))}
             <button 
-              onClick={() => scrollToSection('ingressos')} 
+              onClick={openTicketSales}
               className="bg-amber-600 text-white px-8 py-3 rounded-full hover:bg-amber-500 transition-all transform hover:scale-105 active:scale-95 font-oswald text-sm shadow-[0_0_20px_rgba(217,119,6,0.3)] whitespace-nowrap"
               aria-label="Garantir ingressos para a Festa do Leite"
             >
@@ -361,7 +367,7 @@ const App: React.FC = () => {
             </Link>
           ))}
           <button 
-            onClick={() => scrollToSection('ingressos')} 
+            onClick={openTicketSales}
             className="bg-amber-600 text-white px-12 py-5 rounded-full font-oswald text-2xl mt-8 shadow-2xl"
             aria-label="Comprar ingressos online"
           >
@@ -423,7 +429,7 @@ const App: React.FC = () => {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-4 md:pt-6 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
                     <button 
-                      onClick={() => scrollToSection('ingressos')} 
+                      onClick={openTicketSales}
                       className="group flex items-center justify-center gap-2 bg-white text-black px-8 md:px-10 py-3 md:py-4 rounded-full font-oswald text-sm md:text-base uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]"
                       aria-label="Comprar ingressos online para a Festa do Leite"
                     >
@@ -575,12 +581,14 @@ const App: React.FC = () => {
                      </p>
                      <div className="flex flex-col sm:flex-row gap-6">
                        <button
-                         className="bg-white/10 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest border border-white/30 cursor-default"
+                        onClick={openTicketSales}
+                        className="bg-white/10 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest border border-white/30 hover:bg-white/20 transition-all"
                        >
                          Vendas Online – Em Breve
                        </button>
                        <button
-                         className="bg-transparent border-2 border-white/30 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest cursor-default"
+                        onClick={openTicketSales}
+                        className="bg-transparent border-2 border-white/30 text-white px-12 py-5 rounded-full font-oswald text-xl uppercase tracking-widest hover:bg-white/10 transition-all"
                        >
                          Pontos Físicos – Em Breve
                        </button>
@@ -740,7 +748,12 @@ const App: React.FC = () => {
                           <span className="text-[10px] bg-amber-600/20 text-amber-500 border border-amber-600/30 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest">{news.category}</span>
                           <span className="text-neutral-500 text-[10px] font-bold uppercase tracking-widest">{news.date}</span>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-oswald uppercase mb-6 leading-tight group-hover:text-amber-500 transition-colors">{news.title}</h3>
+                       <Link
+                         to={`/noticias/${news.slug}`}
+                         className="text-2xl md:text-3xl font-oswald uppercase mb-6 leading-tight group-hover:text-amber-500 transition-colors block"
+                       >
+                         {news.title}
+                       </Link>
                         <p className="text-neutral-400 text-sm mb-10 flex-grow leading-relaxed line-clamp-3 font-light">{news.excerpt}</p>
                         <Link
                           to={`/noticias/${news.slug}`}
